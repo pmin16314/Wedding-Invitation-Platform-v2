@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { EyeClosed, EyeOpen } from "@/components/icons";
 
 export default function LoginForm() {
   const [username, setUsername] = useState("");
@@ -46,9 +47,10 @@ export default function LoginForm() {
             required
             value={password}
             onChange={e => setPassword(e.target.value)}
+            placeholder="enter the password"
           />
           <button type="button" className="login-pw-toggle" onClick={() => setShowPw(s => !s)}>
-            {showPw ? "🙈" : "👁"}
+            {showPw ? <EyeClosed /> : <EyeOpen />}
           </button>
         </div>
       </div>

@@ -62,6 +62,51 @@ export function IconGear({ size = 15, className, strokeWidth = 1.4 }: IconProps)
   );
 }
 
+export function EyeOpen({ size = 15, className, strokeWidth = 1.4 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={strokeWidth} className={className}>
+      <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/>
+      <circle cx="8" cy="8" r="2"/>
+    </svg>
+  );
+}
+
+export function EyeClosed({ size = 15, className, strokeWidth = 1.4 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={strokeWidth} className={className}>
+      <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z"/>
+      <path d="M4.6 4.6l6.8 6.8M11.4 4.6l-6.8 6.8"/>
+    </svg>
+  );
+}
+
+export function PhotoIcon({ size = 15, className, strokeWidth = 1.4 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={strokeWidth} className={className}>
+      <rect x="1" y="3" width="14" height="10" rx="1.5"/>
+      <circle cx="8" cy="8" r="2.5"/>
+    </svg>
+  );
+}
+
+export function LetterIcon({ size = 15, className, strokeWidth = 1.4 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={strokeWidth} className={className}>
+      <rect x="1" y="3" width="14" height="10" rx="1.5"/>
+      <path d="M1 4l7 5 7-5"/>
+    </svg>
+  );
+}
+
+export function IconBell({ size = 15, className, strokeWidth = 1.4 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={strokeWidth} className={className}>
+      <path d="M8 1.5a3 3 0 00-3 3v2.5c0 .8-.2 1.6-.5 2.3L2 14h12l-.5-1.7c-.3-.7-.5-1.5-.5-2.3V4.5a3 3 0 00-3-3z"/>
+      <path d="M11.7 14a1.7 1.7 0 01-3.4 0"/>
+    </svg>
+  );
+}
+
 // ── Actions ────────────────────────────────────────────────────────
 
 export function IconEdit({ size = 15, className, strokeWidth = 1.4 }: IconProps) {

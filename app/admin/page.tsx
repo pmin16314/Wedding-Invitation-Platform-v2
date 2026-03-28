@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { IconBell, IconChat, LetterIcon, PhotoIcon } from "@/components/icons";
 
 export const metadata = { title: "Overview — Vowly Admin" };
 
@@ -251,10 +252,9 @@ export default async function AdminPage() {
             <div className="a-card-header"><span className="a-card-title">Engagement</span></div>
             <div className="a-card-body">
               {[
-                { label: "Gallery Photos",  value: totalPhotos,       icon: "🖼",  sub: "uploaded by couples" },
-                { label: "Guest Wishes",    value: totalWishes,       icon: "💌",  sub: `${approvedWishes} approved` },
-                { label: "Guest Moments",   value: totalMoments,      icon: "📷",  sub: "ceremony photos" },
-                { label: "Couple Messages", value: totalChatMessages, icon: "💬",  sub: "sent to support" },
+                { label: "Gallery Photos",  value: totalPhotos,       icon: <PhotoIcon />,  sub: "uploaded by couples" },
+                { label: "Guest Wishes",    value: totalWishes,       icon: <LetterIcon />,  sub: `${approvedWishes} approved` },
+                { label: "Guest Moments",   value: totalMoments,      icon: <IconBell />,  sub: "ceremony photos" },
               ].map(({ label, value, icon, sub }) => (
                 <div key={label} className="a-engage-row">
                   <div className="a-engage-icon">{icon}</div>

@@ -96,7 +96,7 @@
 .a-card-header { @apply flex items-center gap-3 shrink-0; padding: 18px 24px; border-bottom: 1px solid var(--ivory-border); }
 .a-card-title    { @apply font-semibold; font-size: 14px; color: var(--charcoal); }
 .a-card-subtitle { @apply mt-[1px]; font-size: 12px; color: var(--charcoal-mute); }
-.a-card-body     { @apply p-6 flex flex-col flex-1; }
+.a-card-body     { @apply p-6 flex flex-col flex-1 justify-between; }
 .a-card-footer   { @apply flex items-center gap-[10px]; padding: 16px 24px; border-top: 1px solid var(--ivory-border); background: var(--ivory); }
 
 /* ── Stat cards ── */
@@ -327,7 +327,7 @@
 .a-funnel-label     { @apply font-medium; font-size: 11px; }
 .a-funnel-count     { @apply font-semibold; font-size: 12px; color: var(--charcoal); }
 .a-funnel-track     { @apply overflow-hidden; height: 6px; background: var(--ivory-deep); border-radius: 3px; }
-.a-funnel-footer    { @apply flex justify-between pt-3 mt-4; border-top: 1px solid var(--ivory-border); }
+.a-funnel-footer    { @apply grid grid-cols-3 justify-between pt-3 mt-4; border-top: 1px solid var(--ivory-border); }
 .a-funnel-stat      { @apply text-center; }
 .a-funnel-stat-num  { @apply font-normal; font-family: var(--font-display); font-size: 22px; }
 .a-funnel-stat-lbl  { @apply uppercase font-medium; font-size: 10px; letter-spacing: .1em; color: var(--charcoal-mute); }
@@ -535,7 +535,7 @@
 /* ── Package Distribution — bottom split row ── */
 .a-pkg-bottom        { @apply flex gap-4 mt-4 pt-4; border-top: 1px solid var(--ivory-border); }
 .a-pkg-bottom-leads  { @apply flex-1; }
-.a-pkg-revenue-box   { @apply flex-shrink-0 flex flex-col justify-center; width: 180px; background: var(--gold-pale); border-radius: var(--radius-md); padding: 14px 16px; }
+.a-pkg-revenue-box   { @apply flex-1 flex flex-col justify-center; width: 180px; background: var(--gold-pale); border-radius: var(--radius-md); padding: 14px 16px; }
 
 /* ── Weddings table — chat icon button ── */
 .a-btn-chat {

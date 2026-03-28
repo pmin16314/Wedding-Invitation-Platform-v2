@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { EyeClosed, EyeOpen } from "@/components/icons";
 
 export default function CoupleLoginForm({ slug, primaryColor }: { slug: string; primaryColor: string }) {
   const [username, setUsername] = useState("");
@@ -45,7 +46,7 @@ export default function CoupleLoginForm({ slug, primaryColor }: { slug: string; 
             placeholder="your password"
           />
           <button type="button" className="login-pw-toggle" onClick={() => setShowPw(s => !s)}>
-            {showPw ? "🙈" : "👁"}
+            {showPw ? <EyeClosed /> : <EyeOpen />}
           </button>
         </div>
       </div>
