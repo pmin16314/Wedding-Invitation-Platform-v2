@@ -573,3 +573,43 @@
 .a-quick-link-icon span  { font-size: 14px; color: var(--charcoal-mute); }
 .a-quick-link-copy   { @apply flex items-center justify-between w-full text-left cursor-pointer transition-all duration-150 font-medium; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--ivory-border); font-size: 13px; color: var(--charcoal); background: var(--ivory); font-family: var(--font-body); }
 .a-quick-link-copy:hover { background: var(--ivory-deep); }
+.a-text-charcoal-mute { color: var(--charcoal-mute); }
+
+/* ── AdminUI — Toast system ── */
+.a-toast-container { @apply fixed flex flex-col gap-2 z-[9999]; bottom: 32px; right: 32px; }
+.a-toast           { @apply flex items-center gap-3 rounded-md font-medium text-white shadow-lg; padding: 12px 16px; min-width: 260px; max-width: 380px; animation: fadeUp .25s ease both; }
+.a-toast-bar       { @apply flex-shrink-0 self-stretch w-1 rounded-full; }
+.a-toast-text      { @apply flex-1; font-size: 13px; }
+.a-toast-close     { @apply flex-shrink-0 opacity-60 cursor-pointer bg-transparent border-none text-white; font-size: 16px; }
+.a-toast-close:hover { opacity: 1; }
+.a-toast-default   { background: var(--charcoal); }
+.a-toast-default .a-toast-bar { background: var(--gold); }
+.a-toast-success   { background: var(--charcoal); }
+.a-toast-success .a-toast-bar { background: var(--green); }
+.a-toast-error     { background: #dc2626; }
+.a-toast-error .a-toast-bar   { background: rgba(255,255,255,.4); }
+
+/* ── AdminUI — Unsaved Modal ── */
+.a-unsaved-overlay { @apply fixed inset-0 flex items-end justify-center z-[9998]; background: rgba(0,0,0,.1); }
+.a-unsaved-modal   { @apply relative overflow-hidden; background: white; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 24px 28px 32px; width: 100%; max-width: 480px; box-shadow: var(--shadow-lg); animation: fadeUp .2s ease both; }
+.a-unsaved-border  { @apply absolute top-0 left-0 right-0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--charcoal)); }
+.a-unsaved-close   { @apply absolute cursor-pointer bg-transparent border-none; top: 14px; right: 16px; font-size: 18px; color: var(--charcoal-mute); }
+.a-unsaved-text    { @apply mb-5; font-size: 14px; color: var(--charcoal); }
+.a-unsaved-actions { @apply flex gap-3; }
+.a-unsaved-yes     { @apply flex-1 font-medium cursor-pointer; padding: 10px; border-radius: var(--radius-sm); background: var(--charcoal); color: white; border: none; font-size: 13px; }
+.a-unsaved-no      { @apply flex-1 font-medium cursor-pointer; padding: 10px; border-radius: var(--radius-sm); background: var(--ivory); color: var(--charcoal-soft); border: 1px solid var(--ivory-border); font-size: 13px; }
+
+/* ── AdminUI — Save bar (slide up) ── */
+@keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.a-save-bar-hint { font-size: 12px; color: var(--charcoal-mute); }
+
+/* ── Wedding editor page header ── */
+.a-editor-page-top  { @apply flex items-start justify-between flex-wrap mb-7; gap: 20px; }
+.a-editor-slug-row  { @apply flex items-center flex-wrap mt-2; gap: 10px; }
+.a-editor-slug-code { font-size: 12px; background: var(--ivory); padding: 3px 8px; border-radius: 4px; color: var(--charcoal-soft); font-family: monospace; }
+
+/* ── Modal narrow variant ── */
+.a-modal-narrow { max-width: 560px; }
+
+/* ── Pub button full-row ── */
+.a-pub-btn-full { grid-column: 1 / -1; }

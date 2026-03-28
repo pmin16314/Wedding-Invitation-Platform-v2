@@ -80,7 +80,7 @@ export function SaveBar({ dirty, saving, onSave, label="Save Changes" }: {
   if (!dirty && !saving) return null;
   return (
     <div className="a-save-bar" style={{animation:"slideUp .2s cubic-bezier(.16,1,.3,1) both"}}>
-      <span style={{fontSize:12,color:"var(--a-muted)"}}>You have unsaved changes</span>
+      <span className="a-save-bar-hint">You have unsaved changes</span>
       <button className="a-btn a-btn-primary" onClick={onSave} disabled={saving}>
         {saving ? <><span className="a-spinner"/>{" "}Saving…</> : label}
       </button>

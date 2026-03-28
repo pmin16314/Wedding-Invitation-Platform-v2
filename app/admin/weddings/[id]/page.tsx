@@ -24,14 +24,14 @@ export default async function WeddingDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="a-page-scroll"><div className="fade-in">
-      <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", marginBottom:28, gap:20, flexWrap:"wrap" }}>
+      <div className="a-editor-page-top">
         <div>
           <p className="a-breadcrumb">
             <Link href="/admin">Platform</Link> › <Link href="/admin/weddings">Weddings</Link> › {name}
           </p>
           <h1 className="a-page-title">{name}</h1>
-          <div style={{ display:"flex", alignItems:"center", gap:10, marginTop:8 }}>
-            <code style={{ fontSize:12, background:"var(--ivory)", padding:"3px 8px", borderRadius:4, color:"var(--charcoal-soft)" }}>/{w.slug}</code>
+          <div className="a-editor-slug-row">
+            <code className="a-editor-slug-code">/{w.slug}</code>
             <span className={`a-badge a-badge-${w.status.toLowerCase()}`}>{w.status}</span>
             <span className={`a-badge a-badge-${w.package.toLowerCase()}`}>{w.package}</span>
             {w.status === "PUBLISHED" && (

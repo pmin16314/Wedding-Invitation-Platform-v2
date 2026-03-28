@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast, ConfirmDialog } from "@/app/dashboard/DashboardUI";
 
 const INVITE_TYPES = [
   { value:"MR",         label:"Mr.",        seats:1,    fixed:true  },
@@ -56,17 +57,22 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
       method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload),
     });
     setSaving(false);
-    if (!res.ok) { const j = await res.json().catch(()=>({error:"Failed"})); alert(j.error); return; }
+    if (!res.ok) { const j = await res.json().catch(()=>({error:"Failed"})); showToast(j.error ?? "Failed to add guest", "error"); return; }
     const j = await res.json();
     setGuests(gs => [j.data.guest, ...gs]);
     setShowAdd(false);
     setForm({ name:"", inviteType:"MR", phone:"", group:"", side:"", maxAttendees:2 });
+    showToast("Guest added");
   }
 
+  const [confirmId, setConfirmId] = useState<string|null>(null);
+  const { show: showToast } = useToast();
+
   async function del(id: string) {
-    if (!confirm("Remove this guest?")) return;
     await fetch(`/api/couple/guests/${id}`, { method:"DELETE" });
     setGuests(gs => gs.filter(g => g.id !== id));
+    setConfirmId(null);
+    showToast("Guest removed");
   }
 
   const filtered = filter==="ALL"        ? guests
@@ -219,7 +225,7 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
                         <a href={`${APP}/${weddingSlug}/guest/${g.token}`} target="_blank"
                           className="db-btn db-btn-sm db-btn-ghost">↗</a>
                       )}
-                      <button className="db-btn db-btn-sm db-btn-danger-sm" onClick={()=>del(g.id)}>✕</button>
+                      <button className="db-btn db-btn-sm db-btn-danger-sm" onClick={()=>setConfirmId(g.id)}>✕</button>
                     </div>
                   </td>
                 </tr>
@@ -236,6 +242,15 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
           <span className="db-guest-count-note">{guests.length} guests · {totalInvitedSeats} invited seats</span>
         </div>
       </div>
+      <ConfirmDialog
+        open={!!confirmId}
+        title="Remove Guest"
+        message="This will remove the guest and all their RSVP data. This cannot be undone."
+        confirmLabel="Remove"
+        danger
+        onConfirm={() => confirmId && del(confirmId)}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   );
 }

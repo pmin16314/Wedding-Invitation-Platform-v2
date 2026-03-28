@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast, ConfirmDialog } from "@/app/dashboard/DashboardUI";
 
 interface Wish { id:string; guestName:string; message:string; approved:boolean; createdAt:string; }
 
@@ -8,14 +9,19 @@ export default function WishesClient({ wishes: initial }: { wishes: Wish[] }) {
   const pending  = wishes.filter(w => !w.approved);
   const approved = wishes.filter(w => w.approved);
 
+  const [confirmId, setConfirmId] = useState<string|null>(null);
+  const { show: showToast } = useToast();
+
   async function toggle(id: string, approved: boolean) {
     setWishes(ws => ws.map(w => w.id===id ? {...w,approved} : w));
     await fetch(`/api/couple/wishes/${id}`, { method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify({approved}) });
+    showToast(approved ? "Wish approved" : "Wish unapproved");
   }
   async function del(id: string) {
-    if (!confirm("Delete this wish?")) return;
     setWishes(ws => ws.filter(w => w.id!==id));
     await fetch(`/api/couple/wishes/${id}`, { method:"DELETE" });
+    setConfirmId(null);
+    showToast("Wish deleted");
   }
 
   return (
@@ -38,7 +44,7 @@ export default function WishesClient({ wishes: initial }: { wishes: Wish[] }) {
                 </div>
                 <div className="db-wish-actions">
                   <button className="db-btn db-btn-sm db-btn-success" onClick={()=>toggle(w.id,true)}>✓ Approve</button>
-                  <button className="db-btn db-btn-sm db-btn-danger" onClick={()=>del(w.id)}>Delete</button>
+                  <button className="db-btn db-btn-sm db-btn-danger" onClick={()=>setConfirmId(w.id)}>Delete</button>
                 </div>
               </div>
             ))
@@ -66,6 +72,15 @@ export default function WishesClient({ wishes: initial }: { wishes: Wish[] }) {
           }
         </div>
       </div>
+      <ConfirmDialog
+        open={!!confirmId}
+        title="Delete Wish"
+        message="This will permanently delete this guest wish."
+        confirmLabel="Delete"
+        danger
+        onConfirm={() => confirmId && del(confirmId)}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   );
 }

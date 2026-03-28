@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
+import { useToast, ConfirmDialog } from "@/app/dashboard/DashboardUI";
 
 interface Photo { id:string;url:string;publicId:string;caption:string|null;order:number; }
 
@@ -8,20 +9,24 @@ export default function GalleryClient({ photos:init, limit }: { photos:Photo[];l
   const [uploading, setUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [confirmId, setConfirmId] = useState<string|null>(null);
+  const { show: showToast } = useToast();
+
   async function upload(file:File) {
-    if (photos.length >= limit) { alert(`You've reached the ${limit}-photo limit for your package.`); return; }
+    if (photos.length >= limit) { showToast(`Photo limit reached (${limit} photos for your package)`, "error"); return; }
     setUploading(true);
     const fd = new FormData(); fd.append("file", file);
     const res = await fetch("/api/couple/gallery",{method:"POST",body:fd});
     const j = await res.json(); setUploading(false);
-    if(j.ok) setPhotos(ps=>[...ps,j.data.photo]);
-    else alert(j.error ?? "Upload failed");
+    if(j.ok) { setPhotos(ps=>[...ps,j.data.photo]); showToast("Photo uploaded"); }
+    else showToast(j.error ?? "Upload failed", "error");
   }
 
   async function del(id:string) {
-    if(!confirm("Remove this photo?"))return;
     await fetch("/api/couple/gallery",{method:"DELETE",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
     setPhotos(ps=>ps.filter(p=>p.id!==id));
+    setConfirmId(null);
+    showToast("Photo removed");
   }
 
   return (
@@ -43,7 +48,7 @@ export default function GalleryClient({ photos:init, limit }: { photos:Photo[];l
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={p.url} alt={p.caption??""} className="db-gallery-img"/>
             <div className="db-gallery-overlay">
-              <button onClick={()=>del(p.id)} className="db-gallery-del-btn">✕</button>
+              <button onClick={()=>setConfirmId(p.id)} className="db-gallery-del-btn">✕</button>
             </div>
           </div>
         ))}

@@ -1,17 +1,18 @@
 "use client";
+import { useToast } from "@/app/dashboard/DashboardUI";
 import { useState } from "react";
 interface W { slug:string;status:string;rsvpDeadline:string|null;momentsUnlockTime:string|null; }
 export default function SettingsClient({ wedding }: { wedding:W|null }) {
   const [rsvpDeadline,setRsvpDeadline]=useState(wedding?.rsvpDeadline?new Date(wedding.rsvpDeadline).toISOString().slice(0,16):"");
   const [unlockTime,setUnlockTime]=useState(wedding?.momentsUnlockTime?new Date(wedding.momentsUnlockTime).toISOString().slice(0,16):"");
   const [saving,setSaving]=useState(false);
-  const [saved,setSaved]=useState(false);
+  const { show: showToast } = useToast();
   const appUrl=process.env.NEXT_PUBLIC_APP_URL??"http://localhost:3000";
 
   async function save(e:React.FormEvent){
     e.preventDefault();setSaving(true);
     await fetch("/api/couple/settings",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({rsvpDeadline:rsvpDeadline||null,momentsUnlockTime:unlockTime||null})});
-    setSaving(false);setSaved(true);setTimeout(()=>setSaved(false),2500);
+    setSaving(false); showToast("Settings saved", "success");
   }
   return (
     <div className="db-share-panel db-panel-narrow">
@@ -19,7 +20,6 @@ export default function SettingsClient({ wedding }: { wedding:W|null }) {
         <div className="db-card">
           <div className="db-card-header">
             <span className="db-card-title">RSVP & Moments</span>
-            {saved&&<span className="db-saved-msg">✓ Saved</span>}
           </div>
           <div className="db-card-body">
             <div className="db-form-grid">

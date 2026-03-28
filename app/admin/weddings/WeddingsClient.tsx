@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NewWeddingModal from "./NewWeddingModal";
-
+import { IconChat } from "@/components/icons";
 interface Wedding {
   id: string; slug: string; package: string; status: string;
   createdAt: string; primaryColor: string;
@@ -114,13 +114,5 @@ export default function WeddingsClient({ weddings }: { weddings: Wedding[] }) {
         onCreated={handleCreated}
       />
     </div></div>
-  );
-}
-
-function IconChat() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4">
-      <path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3l2 2 2-2h5a1 1 0 001-1V3a1 1 0 00-1-1z"/>
-    </svg>
   );
 }

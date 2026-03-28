@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-
+import { IconGrid, IconHeart, IconUsers, IconChat, IconDesign } from "@/components/icons";
 interface Props {
   user: { name: string; email: string };
   unreadChat?: number;
@@ -76,9 +76,3 @@ export default function AdminSidebar({ user, unreadChat = 0, newLeads = 0 }: Pro
     </aside>
   );
 }
-
-function IconGrid() { return <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>; }
-function IconHeart() { return <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M8 13.5S1.5 9.5 1.5 5.5a3 3 0 015.3-1.9L8 5l1.2-1.4a3 3 0 015.3 1.9c0 4-6.5 8-6.5 8z"/></svg>; }
-function IconUsers() { return <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="6" cy="5" r="2.5"/><path d="M1 13c0-2.8 2.2-5 5-5s5 2.2 5 5"/><circle cx="12" cy="5" r="2"/><path d="M15 13c0-2.2-1.3-4-3-4.5"/></svg>; }
-function IconChat() { return <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M14 2H2a1 1 0 00-1 1v8a1 1 0 001 1h3l2 2 2-2h5a1 1 0 001-1V3a1 1 0 00-1-1z"/></svg>; }
-function IconDesign() { return <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4"><circle cx="8" cy="8" r="2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4"/></svg>; }

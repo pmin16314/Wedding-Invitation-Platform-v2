@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast } from "@/app/dashboard/DashboardUI";
 
 const DEFAULT_INVITATION_LINE = "Together with their families, request the honour of your presence at the marriage of";
 const DEFAULT_PRE_TEXT = "Together with their families";
@@ -34,17 +35,20 @@ export default function ContentClient({ content, wedding }: { content:any; weddi
     postCeremonyNote:  content?.postCeremonyNote  ?? "",
     specialNote:       content?.specialNote       ?? "",
   });
-  const [status, setStatus] = useState("idle");
+  const { show: showToast } = useToast();
   const f = (k: keyof ContentData) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
     setForm(p => ({...p, [k]: e.target.value}));
 
+  const [saving, setSaving] = useState(false);
+
   async function save(e: React.FormEvent) {
-    e.preventDefault(); setStatus("saving");
+    e.preventDefault(); setSaving(true);
     const res = await fetch("/api/couple/content", {
       method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form),
     });
-    setStatus(res.ok ? "saved" : "error");
-    if (res.ok) setTimeout(() => setStatus("idle"), 2500);
+    setSaving(false);
+    if (res.ok) showToast("Wedding details saved", "success");
+    else showToast("Save failed", "error");
   }
 
   const Section = ({ title }: { title: string }) => (
@@ -58,13 +62,9 @@ export default function ContentClient({ content, wedding }: { content:any; weddi
       <div className="db-card">
         <div className="db-card-header">
           <span className="db-card-title">Wedding Details</span>
-          <div className="db-save-row db-ml-auto">
-            {status==="saved"  && <span className="db-saved-msg">✓ Saved</span>}
-            {status==="error"  && <span className="db-error-msg">Save failed</span>}
-            <button type="submit" className="db-btn db-btn-primary" disabled={status==="saving"}>
-              {status==="saving" ? <><span className="db-spinner"/>Saving…</> : "Save Changes"}
+          <button type="submit" className="db-btn db-btn-primary db-ml-auto" disabled={saving}>
+              {saving ? <><span className="db-spinner"/>Saving…</> : "Save Changes"}
             </button>
-          </div>
         </div>
         <div className="db-card-body">
           <div className="db-form-grid">

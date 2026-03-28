@@ -10,7 +10,7 @@ export default async function NewWeddingPage() {
   return (
     <div className="a-page-scroll"><div className="fade-in">
       <div className="a-page-header">
-        <p className="a-page-label"><a href="/admin/weddings" style={{ color: "var(--charcoal-mute)", textDecoration: "none" }}>Weddings</a> › New</p>
+        <p className="a-page-label"><a href="/admin/weddings" className="a-no-underline a-text-charcoal-mute">Weddings</a> › New</p>
         <h1 className="a-page-title">Create Wedding</h1>
         <p className="a-page-subtitle">Set up a new couple account and wedding record.</p>
       </div>

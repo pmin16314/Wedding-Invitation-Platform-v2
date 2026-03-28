@@ -1,6 +1,7 @@
 "use client";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useToast, SaveBar } from "@/app/admin/AdminUI";
 
 /* ── Constants ── */
 const SECTIONS: Record<string,string> = {
@@ -41,24 +42,6 @@ interface WeddingData {
   guestCount:number;rsvpCount:number;photoCount:number;
 }
 
-/* ── Toast ── */
-function Toast({ message, type, onDone }: { message:string; type:"success"|"error"; onDone:()=>void }) {
-  useEffect(() => { const t = setTimeout(onDone, 3000); return () => clearTimeout(t); }, [onDone]);
-  return (
-    <div className="a-toast" style={{ background: type==="success" ? "var(--charcoal)" : "#dc2626" }}>
-      <span className="a-toast-icon">{type==="success" ? "✓" : "✕"}</span>
-      {message}
-    </div>
-  );
-}
-
-function useToast() {
-  const [toast, setToast] = useState<{msg:string;type:"success"|"error"}|null>(null);
-  const show = useCallback((msg:string, type:"success"|"error"="success") => setToast({msg,type}), []);
-  const node = toast ? <Toast message={toast.msg} type={toast.type} onDone={()=>setToast(null)}/> : null;
-  return { show, node };
-}
-
 /* ── Confirm dialog ── */
 interface ConfirmProps {
   open: boolean;
@@ -90,18 +73,6 @@ function ConfirmDialog({ open, title, message, confirmLabel, confirmClass="a-btn
           <button className={`a-btn ${confirmClass}`} onClick={onConfirm}>{confirmLabel}</button>
         </div>
       </div>
-    </div>
-  );
-}
-
-/* ── Save bar ── */
-function SaveBar({ onSave, saving, dirty, label="Save Changes" }: { onSave:()=>void; saving:boolean; dirty:boolean; label?:string }) {
-  if (!dirty && !saving) return null;
-  return (
-    <div className="a-save-bar">
-      <button className="a-btn a-btn-primary" onClick={onSave} disabled={saving || !dirty}>
-        {saving ? <><span className="a-spinner"/>Saving…</> : label}
-      </button>
     </div>
   );
 }
@@ -227,7 +198,6 @@ export default function WeddingEditor({ wedding }: { wedding: WeddingData }) {
 
   return (
     <>
-      {toast.node}
       <ConfirmDialog
         open={!!confirm}
         title={confirm?.title ?? ""}
@@ -362,15 +332,26 @@ function EventsPanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
   const [adding,  setAdding]  = useState(false);
   const [editing, setEditing] = useState<typeof w.events[0]|null>(null);
 
+  const [confirmEventId, setConfirmEventId] = useState<string|null>(null);
+
   async function del(id:string) {
-    if(!confirm("Remove this event?"))return;
     const res = await fetch(`/api/couple/events/${id}`,{method:"DELETE"});
     if(res.ok){setEvents(es=>es.filter(e=>e.id!==id));onToast("Event removed");onRefresh();}
     else onToast("Failed to remove event","error");
+    setConfirmEventId(null);
   }
 
   return (
     <div>
+      <ConfirmDialog
+        open={!!confirmEventId}
+        title="Remove Event"
+        message="This will remove the event from the invitation timeline."
+        confirmLabel="Remove"
+        confirmClass="a-btn-danger"
+        onConfirm={() => confirmEventId && del(confirmEventId)}
+        onCancel={() => setConfirmEventId(null)}
+      />
       <div className="a-events-header">
         <h3 className="a-panel-title-inline">Event Timeline</h3>
         <button className="a-btn a-btn-primary a-btn-sm" onClick={()=>{setAdding(true);setEditing(null);}}>+ Add Event</button>
@@ -393,7 +374,7 @@ function EventsPanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
             </div>
             <div className="a-event-actions">
               <button className="a-btn a-btn-sm a-btn-outline" onClick={()=>{setEditing(ev);setAdding(false);}}>Edit</button>
-              <button className="a-event-remove" onClick={()=>del(ev.id)}>✕</button>
+              <button className="a-event-remove" onClick={()=>setConfirmEventId(ev.id)}>✕</button>
             </div>
           </div>
         ))
@@ -699,11 +680,7 @@ function AssetSlotRow({weddingId,slot,label,accept,existing,onChanged,onToast}:{
                 <label className="a-btn a-btn-sm a-btn-outline" style={{cursor:"pointer"}}>
                   Replace<input type="file" accept={accept} style={{display:"none"}} onChange={e=>{const f=e.target.files?.[0];if(f)handleFile(f);e.target.value="";}}/>
                 </label>
-                <button className="a-btn a-btn-sm a-btn-danger a-asset-btn-remove" onClick={async()=>{
-                  if(!confirm("Remove this asset?"))return;
-                  await fetch(`/api/admin/weddings/${weddingId}/assets/${slot}`,{method:"DELETE"});
-                  onChanged(null);setOpen(false);onToast("Asset removed");
-                }}>Remove</button>
+                <AssetRemoveButton weddingId={weddingId} slot={slot} onChanged={onChanged} setOpen={setOpen} onToast={onToast}/>
               </div>
             </>
           ) : (
@@ -718,5 +695,34 @@ function AssetSlotRow({weddingId,slot,label,accept,existing,onChanged,onToast}:{
         </div>
       )}
     </div>
+  );
+}
+
+/* ── Asset remove button (with inline confirm) ── */
+function AssetRemoveButton({ weddingId, slot, onChanged, setOpen, onToast }: {
+  weddingId:string; slot:string;
+  onChanged:(a:null)=>void; setOpen:(v:boolean)=>void;
+  onToast:(m:string,t?:"success"|"error")=>void;
+}) {
+  const [open, setConfirmOpen] = useState(false);
+  return (
+    <>
+      <button className="a-btn a-btn-sm a-btn-danger a-asset-btn-remove" onClick={() => setConfirmOpen(true)}>
+        Remove
+      </button>
+      <ConfirmDialog
+        open={open}
+        title="Remove Asset"
+        message="This will permanently delete the designer asset from this slot."
+        confirmLabel="Remove"
+        confirmClass="a-btn-danger"
+        onConfirm={async () => {
+          await fetch(`/api/admin/weddings/${weddingId}/assets/${slot}`, { method:"DELETE" });
+          onChanged(null); setOpen(false); onToast("Asset removed");
+          setConfirmOpen(false);
+        }}
+        onCancel={() => setConfirmOpen(false)}
+      />
+    </>
   );
 }

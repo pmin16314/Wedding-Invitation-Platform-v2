@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useToast, ConfirmDialog } from "@/app/dashboard/DashboardUI";
 
 const PRESETS = ["Seth Pirith","Poruwa Ceremony","Reception","Homecoming","Engagement","Dinner"];
 
@@ -13,10 +14,14 @@ export default function EventsClient({ events: initial, weddingId }: { events: W
   const [adding,  setAdding]  = useState(false);
   const [editing, setEditing] = useState<WeddingEvent|null>(null);
 
+  const [confirmId, setConfirmId] = useState<string|null>(null);
+  const { show: showToast } = useToast();
+
   async function del(id: string) {
-    if (!confirm("Remove this event?")) return;
     const res = await fetch(`/api/couple/events/${id}`, { method:"DELETE" });
-    if (res.ok) setEvents(es => es.filter(e => e.id !== id));
+    if (res.ok) { setEvents(es => es.filter(e => e.id !== id)); showToast("Event removed"); }
+    else showToast("Failed to remove event", "error");
+    setConfirmId(null);
   }
 
   return (
@@ -30,8 +35,8 @@ export default function EventsClient({ events: initial, weddingId }: { events: W
           <div className="db-card-body">
             <EventForm weddingId={weddingId} existing={editing} nextOrder={events.length}
               onSaved={ev => {
-                if (editing) { setEvents(es => es.map(e => e.id===ev.id ? ev : e)); setEditing(null); }
-                else { setEvents(es => [...es, ev]); setAdding(false); }
+                if (editing) { setEvents(es => es.map(e => e.id===ev.id ? ev : e)); setEditing(null); showToast("Event updated"); }
+                else { setEvents(es => [...es, ev]); setAdding(false); showToast("Event added"); }
               }}
               onCancel={() => { setAdding(false); setEditing(null); }}
             />
@@ -60,12 +65,21 @@ export default function EventsClient({ events: initial, weddingId }: { events: W
               </div>
               <div className="db-event-actions">
                 <button className="db-btn db-btn-sm db-btn-outline" onClick={()=>{setEditing(ev);setAdding(false);}}>Edit</button>
-                <button className="db-btn db-btn-sm db-btn-danger-sm" onClick={()=>del(ev.id)}>✕</button>
+                <button className="db-btn db-btn-sm db-btn-danger-sm" onClick={()=>setConfirmId(ev.id)}>✕</button>
               </div>
             </div>
           ))}
         </div>
       </div>
+      <ConfirmDialog
+        open={!!confirmId}
+        title="Remove Event"
+        message="This will remove the event from the invitation timeline."
+        confirmLabel="Remove"
+        danger
+        onConfirm={() => confirmId && del(confirmId)}
+        onCancel={() => setConfirmId(null)}
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import DashboardSidebar from "./DashboardSidebar";
+import { ToastProvider } from "./DashboardUI";
 import "./dashboard.css";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -19,18 +20,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
   ]);
 
   return (
-    <div className="db-wrap">
-      <DashboardSidebar
-        user={{ name: session.user.name ?? "Couple", email: session.user.email ?? "" }}
-        unreadChat={unreadChat}
-        wedding={wedding ? {
-          slug: wedding.slug, status: wedding.status,
-          brideName: wedding.content?.brideName ?? "",
-          groomName: wedding.content?.groomName ?? "",
-          primaryColor: wedding.theme?.primaryColor ?? "#C9A84C",
-        } : null}
-      />
-      <main className="db-main">{children}</main>
-    </div>
+    <ToastProvider>
+      <div className="db-wrap">
+        <DashboardSidebar
+          user={{ name: session.user.name ?? "Couple", email: session.user.email ?? "" }}
+          unreadChat={unreadChat}
+          wedding={wedding ? {
+            slug: wedding.slug, status: wedding.status,
+            brideName: wedding.content?.brideName ?? "",
+            groomName: wedding.content?.groomName ?? "",
+            primaryColor: wedding.theme?.primaryColor ?? "#C9A84C",
+          } : null}
+        />
+        <main className="db-main">{children}</main>
+      </div>
+    </ToastProvider>
   );
 }
