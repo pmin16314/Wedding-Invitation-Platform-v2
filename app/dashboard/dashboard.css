@@ -1,0 +1,372 @@
+/* ═══════════════════════════════════════════════
+   VOWLY COUPLE DASHBOARD — Tailwind-based
+   ═══════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.db-wrap { @apply flex min-h-screen; }
+.db-main { @apply flex-1 min-w-0 bg-ivory; padding: 40px 48px; }
+
+/* ── Sidebar ── */
+.db-sidebar {
+  @apply flex-shrink-0 flex flex-col sticky top-0 h-screen overflow-y-auto;
+  width: 220px; background: white;
+  border-right: 1px solid var(--ivory-border);
+}
+.db-sidebar-brand { padding: 24px 20px 18px; border-bottom: 1px solid var(--ivory-border); }
+.db-sidebar-brand-mark {
+  @apply uppercase font-medium mb-[10px];
+  font-size: 11px; letter-spacing: .1em; color: var(--charcoal-mute);
+}
+.db-wedding-name  { @apply leading-tight; font-family: var(--font-display); font-size: 18px; color: var(--charcoal); }
+.db-wedding-status { @apply flex items-center gap-2 mt-2; }
+.db-status-pill {
+  @apply inline-flex items-center gap-[5px] font-medium;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px;
+}
+.db-status-pill.published { background: var(--green-pale); color: var(--green); }
+.db-status-pill.draft     { background: var(--ivory-deep); color: var(--charcoal-soft); border: 1px solid var(--ivory-border); }
+.db-view-invite-link      { @apply no-underline; font-size: 11px; color: var(--charcoal-mute); }
+.db-view-invite-link:hover { color: var(--charcoal); text-decoration: underline; }
+
+.db-sidebar-nav { @apply flex-1; padding: 14px 12px; }
+.db-nav-item {
+  @apply flex items-center gap-[10px] no-underline transition-all duration-150 mb-[2px];
+  padding: 9px 10px; border-radius: var(--radius-sm);
+  color: var(--charcoal-soft); font-size: 13px; font-weight: 400;
+}
+.db-nav-item:hover { color: var(--charcoal); background: var(--ivory); }
+.db-nav-item.active { color: var(--charcoal); background: var(--ivory-deep); font-weight: 500; }
+.db-nav-item svg { @apply flex-shrink-0; width: 15px; height: 15px; opacity: .6; }
+.db-nav-item.active svg { opacity: 1; }
+.db-nav-item-label { @apply flex-1; }
+.db-nav-badge {
+  @apply inline-flex items-center justify-center font-semibold rounded-full;
+  min-width: 18px; height: 18px; padding: 0 5px; font-size: 10px;
+}
+
+.db-sidebar-user { padding: 14px 16px 18px; border-top: 1px solid var(--ivory-border); }
+.db-user-inner  { @apply flex items-center gap-[10px] mb-[10px]; }
+.db-user-avatar { @apply flex-shrink-0 flex items-center justify-center rounded-full font-semibold text-white; width: 32px; height: 32px; font-size: 12px; }
+.db-user-name   { @apply font-medium leading-tight; font-size: 12px; color: var(--charcoal); }
+.db-user-email  { font-size: 11px; color: var(--charcoal-mute); }
+.db-signout-btn {
+  @apply w-full cursor-pointer transition-all duration-150;
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  background: var(--ivory); border: 1px solid var(--ivory-border);
+  color: var(--charcoal-soft); font-size: 12px; font-family: var(--font-body);
+}
+.db-signout-btn:hover { background: var(--ivory-deep); color: var(--charcoal); }
+
+/* ── Page chrome ── */
+.db-page-header { @apply mb-8; }
+.db-page-label  { @apply uppercase font-medium mb-2; font-size: 11px; letter-spacing: .12em; color: var(--charcoal-mute); }
+.db-page-title  { @apply leading-none font-normal; font-family: var(--font-display); font-size: 30px; color: var(--charcoal); }
+.db-page-top    { @apply flex items-start justify-between gap-5 flex-wrap mb-7; }
+
+/* ── Cards ── */
+.db-card        { @apply overflow-hidden; background: white; border: 1px solid var(--ivory-border); border-radius: var(--radius-lg); }
+.db-card-header { @apply flex items-center gap-[10px]; padding: 16px 22px; border-bottom: 1px solid var(--ivory-border); }
+.db-card-title  { @apply font-semibold; font-size: 14px; color: var(--charcoal); }
+.db-card-body   { padding: 22px; }
+.db-card-footer { @apply flex items-center gap-[10px]; padding: 14px 22px; border-top: 1px solid var(--ivory-border); background: var(--ivory); }
+
+/* ── Stat cards ── */
+.db-stats-grid { @apply grid gap-4 mb-6; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); }
+.db-stat-card  { background: white; border: 1px solid var(--ivory-border); border-radius: var(--radius-lg); padding: 20px 22px; }
+.db-stat-value { @apply leading-none; font-family: var(--font-display); font-size: 32px; color: var(--charcoal); }
+.db-stat-label { @apply uppercase font-medium mt-[6px]; font-size: 10px; letter-spacing: .12em; color: var(--charcoal-mute); }
+.db-stat-sub   { @apply mt-1; font-size: 12px; }
+
+/* ── Countdown ── */
+.db-countdown       { @apply flex items-baseline gap-[6px]; }
+.db-countdown-num   { @apply leading-none font-normal; font-family: var(--font-display); font-size: 48px; color: var(--charcoal); }
+.db-countdown-colon { font-family: var(--font-display); font-size: 32px; color: var(--ivory-border); }
+.db-countdown-unit  { @apply uppercase font-medium block mt-1; font-size: 10px; letter-spacing: .1em; color: var(--charcoal-mute); }
+
+/* ── Quick actions ── */
+.db-action-grid { @apply grid gap-[10px]; grid-template-columns: 1fr 1fr; }
+.db-action-item {
+  @apply flex items-center gap-3 no-underline transition-all duration-150;
+  padding: 14px 16px; background: white;
+  border: 1px solid var(--ivory-border); border-radius: var(--radius-md);
+  color: var(--charcoal);
+}
+.db-action-item:hover { background: var(--ivory); border-color: var(--charcoal-mute); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.db-action-icon  { @apply flex-shrink-0 flex items-center justify-center; width: 32px; height: 32px; border-radius: var(--radius-sm); }
+.db-action-label { @apply font-medium; font-size: 13px; }
+
+/* ── Buttons ── */
+.db-btn { @apply inline-flex items-center gap-[7px] font-medium cursor-pointer transition-all duration-150 no-underline whitespace-nowrap; padding: 9px 18px; border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font-body); border: none; }
+.db-btn-primary { background: var(--charcoal); color: white; }
+.db-btn-primary:hover { background: var(--charcoal-mid); }
+.db-btn-outline { background: transparent; color: var(--charcoal); border: 1px solid var(--ivory-border); }
+.db-btn-outline:hover { background: var(--ivory); border-color: var(--charcoal-mute); }
+.db-btn-ghost   { background: transparent; color: var(--charcoal-soft); padding: 9px 12px; }
+.db-btn-ghost:hover { background: var(--ivory); color: var(--charcoal); }
+.db-btn-sm      { padding: 6px 12px; font-size: 12px; }
+.db-btn-danger  { background: var(--red-pale); color: var(--red); border: 1px solid #fcc; }
+.db-btn-success { background: var(--green-pale); color: var(--green); border: 1px solid #b8dfc4; }
+.db-btn:disabled { @apply opacity-50 cursor-not-allowed; }
+
+/* ── Forms ── */
+.db-field    { @apply flex flex-col gap-[6px]; }
+.db-label    { @apply uppercase font-medium; font-size: 10px; letter-spacing: .1em; color: var(--charcoal-soft); }
+.db-input, .db-select, .db-textarea { @apply w-full transition-all duration-150; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--ivory-border); background: white; font-size: 13px; color: var(--charcoal); font-family: var(--font-body); }
+.db-input:focus, .db-select:focus, .db-textarea:focus { @apply outline-none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,.12); }
+.db-textarea  { @apply resize-y; min-height: 90px; line-height: 1.6; }
+.db-form-grid { @apply grid gap-4; grid-template-columns: 1fr 1fr; }
+.db-form-full { grid-column: 1 / -1; }
+
+/* ── Tables ── */
+.db-table-wrap  { @apply overflow-x-auto; }
+.db-table       { @apply w-full border-collapse; }
+.db-table th    { @apply uppercase font-medium text-left whitespace-nowrap; font-size: 10px; letter-spacing: .1em; color: var(--charcoal-mute); padding: 10px 14px; border-bottom: 1px solid var(--ivory-border); }
+.db-table td    { @apply align-middle; padding: 13px 14px; border-bottom: 1px solid var(--ivory-border); font-size: 13px; }
+.db-table tr:last-child td  { @apply border-b-0; }
+.db-table tbody tr:hover td { background: var(--ivory); }
+
+/* ── Badges ── */
+.db-badge            { @apply inline-flex items-center font-medium; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+.db-badge-attending  { background: var(--green-pale); color: var(--green); }
+.db-badge-declined   { background: var(--red-pale); color: var(--red); }
+.db-badge-pending    { background: var(--ivory-deep); color: var(--charcoal-soft); border: 1px solid var(--ivory-border); }
+.db-badge-shared     { background: var(--green-pale); color: var(--green); }
+.db-badge-not-shared { background: var(--ivory-deep); color: var(--charcoal-mute); border: 1px solid var(--ivory-border); }
+
+/* ── Guest cards ── */
+.db-guest-card   { @apply flex items-center gap-3 mb-2; background: white; border: 1px solid var(--ivory-border); border-radius: var(--radius-md); padding: 14px 16px; }
+.db-guest-avatar { @apply flex-shrink-0 flex items-center justify-center rounded-full font-semibold; width: 36px; height: 36px; font-size: 13px; }
+
+/* ── Share panel ── */
+.db-share-preview { @apply leading-relaxed; background: var(--ivory-deep); border: 1px solid var(--ivory-border); border-radius: var(--radius-md); padding: 16px; font-size: 13px; color: var(--charcoal); font-family: Georgia, serif; white-space: pre-wrap; }
+.db-share-actions { @apply flex gap-[10px] flex-wrap mt-3; }
+.db-wa-btn        { @apply inline-flex items-center gap-2 font-medium cursor-pointer transition-opacity duration-150 no-underline; padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: var(--radius-sm); font-size: 13px; font-family: var(--font-body); }
+.db-wa-btn:hover  { opacity: .9; }
+
+/* ── Chat ── */
+.db-chat-wrap     { @apply flex flex-col overflow-hidden; height: calc(100vh - 180px); background: white; border: 1px solid var(--ivory-border); border-radius: var(--radius-lg); }
+.db-chat-header   { @apply flex items-center gap-[10px]; padding: 14px 18px; border-bottom: 1px solid var(--ivory-border); }
+.db-chat-messages { @apply flex-1 overflow-y-auto flex flex-col gap-[10px]; padding: 18px; }
+.db-chat-bubble   { @apply leading-relaxed; max-width: 72%; padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; }
+.db-chat-bubble.mine   { align-self: flex-end; border-bottom-right-radius: 4px; }
+.db-chat-bubble.theirs { background: var(--ivory-deep); color: var(--charcoal); align-self: flex-start; border-bottom-left-radius: 4px; }
+.db-chat-bubble.system { @apply italic text-center; background: transparent; color: var(--charcoal-mute); font-size: 12px; align-self: center; max-width: 90%; border: 1px dashed var(--ivory-border); padding: 6px 14px; }
+.db-chat-time     { @apply mt-[3px]; font-size: 10px; color: var(--charcoal-mute); }
+.db-chat-input-row { @apply flex gap-[10px] items-end; padding: 12px 14px; border-top: 1px solid var(--ivory-border); }
+.db-chat-input    { @apply flex-1 resize-none outline-none transition-colors duration-150; padding: 10px 14px; border: 1px solid var(--ivory-border); border-radius: var(--radius-md); font-size: 13px; min-height: 42px; max-height: 120px; font-family: var(--font-body); color: var(--charcoal); background: white; }
+.db-chat-input:focus { border-color: var(--gold); }
+
+/* ── Gallery ── */
+.db-gallery-grid    { @apply grid gap-3; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.db-gallery-item    { @apply relative overflow-hidden; aspect-ratio: 1; border-radius: var(--radius-md); background: var(--ivory); }
+.db-gallery-img     { @apply w-full h-full object-cover; }
+.db-gallery-overlay { @apply absolute inset-0 flex items-center justify-center gap-2 opacity-0 transition-opacity duration-200; background: rgba(0,0,0,.5); }
+.db-gallery-item:hover .db-gallery-overlay { @apply opacity-100; }
+.db-gallery-upload  { @apply flex flex-col items-center justify-center gap-[6px] cursor-pointer transition-all duration-150; aspect-ratio: 1; border: 2px dashed var(--ivory-border); border-radius: var(--radius-md); background: white; }
+.db-gallery-upload:hover { border-color: var(--gold); background: var(--gold-pale); }
+
+/* ── RSVP progress bar ── */
+.db-rsvp-bar  { @apply overflow-hidden mt-2; height: 8px; border-radius: 4px; background: var(--ivory-deep); }
+.db-rsvp-fill { @apply h-full transition-all duration-500; border-radius: 4px; background: linear-gradient(90deg, var(--green), #6abf82); }
+
+/* ── Reminder banner ── */
+.db-reminder      { @apply flex items-center gap-3 mb-6; padding: 12px 18px; background: var(--gold-pale); border: 1px solid var(--gold-light); border-radius: var(--radius-md); }
+.db-reminder-icon { @apply flex-shrink-0; font-size: 16px; }
+.db-reminder-text { @apply flex-1; font-size: 12px; color: #8B6914; }
+.db-reminder-link { @apply font-medium underline cursor-pointer; font-size: 12px; color: #8B6914; }
+
+/* ── Spinner ── */
+.db-spinner { @apply flex-shrink-0 rounded-full; width: 14px; height: 14px; border: 2px solid rgba(26,25,22,.15); border-top-color: var(--charcoal); animation: spin .6s linear infinite; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) { .db-main { padding: 24px; } }
+@media (max-width: 768px) {
+  .db-sidebar     { display: none; }
+  .db-form-grid   { grid-template-columns: 1fr; }
+  .db-action-grid { grid-template-columns: 1fr; }
+  .db-stats-grid  { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Dashboard overview page ── */
+.db-no-wedding    { @apply flex items-center justify-center flex-col gap-3 text-center; min-height: 60vh; }
+.db-no-wedding-icon { font-size: 48px; opacity: .15; }
+.db-no-wedding-title { @apply font-normal; font-family: var(--font-display); font-size: 24px; color: var(--charcoal); }
+.db-no-wedding-text { font-size: 14px; color: var(--charcoal-soft); }
+.db-page-subtitle { @apply mt-1; font-size: 14px; color: var(--charcoal-soft); }
+.db-overview-row  { @apply grid gap-5 mb-6; grid-template-columns: 1fr 1fr; }
+.db-card-meta     { @apply ml-auto; font-size: 12px; color: var(--charcoal-mute); }
+.db-card-center   { @apply flex justify-center items-center; min-height: 120px; }
+.db-rsvp-list     { @apply flex flex-col gap-2 mt-4; }
+.db-rsvp-item     { @apply flex items-center gap-[10px]; font-size: 13px; }
+.db-rsvp-dot      { @apply flex-shrink-0 rounded-full; width: 6px; height: 6px; }
+.db-rsvp-status   { @apply ml-auto; font-size: 11px; color: var(--charcoal-mute); }
+.db-rsvp-counts   { @apply flex justify-between mb-[6px]; font-size: 12px; color: var(--charcoal-mute); }
+.db-empty-small   { @apply text-center; padding: 20px 0; font-size: 13px; color: var(--charcoal-mute); }
+.db-action-arrow  { font-size: 14px; color: var(--charcoal-mute); }
+
+/* ── Countdown ── */
+.db-countdown-colon { @apply self-start; padding-top: 6px; font-family: var(--font-display); font-size: 36px; line-height: 1; color: var(--ivory-border); }
+.db-countdown-placeholder { height: 80px; }
+.db-countdown-past { font-size: 14px; color: var(--charcoal-mute); }
+.db-countdown-unit-wrap { @apply text-center; min-width: 64px; }
+
+/* ── Sidebar ── */
+.db-brand-mark    { color: var(--charcoal-mute); }
+
+/* ── Guest stats mini-grid ── */
+.db-mini-stats    { @apply grid gap-3 mb-5; grid-template-columns: repeat(3, 1fr); }
+.db-mini-stat     { @apply p-[16px_20px]; }
+.db-mini-stat-num { @apply font-normal; font-family: var(--font-display); font-size: 30px; }
+.db-mini-stat-lbl { @apply uppercase font-medium mt-1; font-size: 10px; letter-spacing: .1em; color: var(--charcoal-mute); }
+.db-mini-stat-sub { @apply mt-[2px]; font-size: 11px; color: var(--charcoal-mute); }
+
+/* ── Filter / toolbar row ── */
+.db-toolbar       { @apply flex items-center gap-2 mb-4 flex-wrap; }
+.db-toolbar-end   { @apply ml-auto; }
+
+/* ── Hint text ── */
+.db-hint          { font-size: 10px; color: var(--charcoal-mute); }
+.db-hint-mt       { font-size: 11px; color: var(--charcoal-mute); margin-top: 4px; }
+
+/* ── Inline form actions ── */
+.db-form-actions  { @apply flex gap-2 justify-end mt-3; }
+
+/* ── Card body compact ── */
+.db-card-body-sm  { padding: 8px 22px; }
+
+/* ── Info row (e.g. settings, credentials) ── */
+.db-info-row      { @apply flex justify-between items-center; padding: 10px 0; border-bottom: 1px solid var(--ivory-border); }
+.db-info-label    { @apply uppercase font-medium; font-size: 11px; letter-spacing: .1em; color: var(--charcoal-mute); }
+.db-info-value    { font-size: 12px; font-family: monospace; color: var(--charcoal); }
+.db-save-row      { @apply flex items-center gap-[10px] mt-4; }
+.db-saved-msg     { @apply font-medium ml-auto; font-size: 12px; color: var(--green); }
+.db-error-msg     { font-size: 12px; color: var(--red); }
+
+/* ── Section divider in form ── */
+.db-section-head  { @apply pt-5 mt-2; grid-column: 1/-1; border-top: 1px solid var(--ivory-border); }
+.db-section-title { @apply uppercase font-semibold; font-size: 11px; letter-spacing: .12em; color: var(--charcoal-mute); }
+
+/* ── Invitation line preview (couple content) ── */
+.db-invite-preview     { @apply text-center; background: var(--ivory-deep); border: 1px solid var(--ivory-border); border-radius: var(--radius-md); padding: 28px 24px; }
+.db-invite-preview-lbl { @apply uppercase mb-3; font-size: 11px; letter-spacing: .1em; color: var(--charcoal-mute); }
+.db-invite-opening     { @apply leading-relaxed mb-3; font-size: 13px; color: var(--charcoal-soft); white-space: pre-line; }
+.db-invite-name        { @apply leading-tight mb-2; font-family: Georgia, serif; font-size: 28px; color: var(--charcoal); }
+.db-invite-and         { @apply italic mb-2; font-size: 13px; color: var(--charcoal-soft); }
+.db-invite-body        { @apply leading-relaxed mb-4; font-size: 13px; color: var(--charcoal-soft); }
+.db-invite-date        { @apply inline-flex items-center gap-3 font-semibold; font-size: 13px; color: var(--charcoal); }
+.db-invite-venue       { @apply mt-[10px]; font-size: 13px; color: var(--charcoal-soft); }
+.db-invite-sub-venue   { @apply block font-medium; }
+.db-invite-address     { @apply block; font-size: 12px; color: var(--charcoal-mute); }
+.db-presets-row        { @apply flex gap-[6px] flex-wrap; }
+.db-presets-section    { margin-top: 12px; margin-bottom: 16px; }
+.db-presets-lbl        { @apply mb-2; font-size: 11px; color: var(--charcoal-mute); }
+.db-card-subtitle-meta { font-size: 11px; color: var(--charcoal-mute); margin-left: 8px; }
+
+/* ── Events list ── */
+.db-events-header     { @apply flex justify-end mb-5; }
+.db-event-form-card   { @apply mb-4; }
+.db-event-presets     { @apply flex gap-[6px] flex-wrap mb-3 items-center; }
+.db-event-preset-lbl  { font-size: 11px; color: var(--charcoal-mute); }
+.db-event-list        { padding: 8px 22px; }
+.db-event-empty       { @apply text-center; padding: 40px 0; color: var(--charcoal-mute); }
+.db-event-empty-icon  { @apply opacity-[.15] mb-2; font-size: 32px; }
+.db-event-empty-text  { font-size: 14px; }
+.db-event-row-inner   { @apply flex items-start gap-[14px]; padding: 18px 0; border-bottom: 1px solid var(--ivory-border); }
+.db-event-row-inner:last-child { border-bottom: none; }
+.db-event-num         { @apply flex-shrink-0 flex items-center justify-center rounded-full font-semibold text-white; width: 32px; height: 32px; background: var(--charcoal); font-size: 13px; margin-top: 4px; }
+.db-event-content     { @apply flex-1; }
+.db-event-title       { @apply font-semibold mb-1; font-size: 15px; }
+.db-event-time        { font-size: 13px; color: var(--charcoal-soft); }
+.db-event-nekath      { @apply ml-2; padding: 2px 8px; background: var(--gold-pale); color: #8B6914; border-radius: 12px; font-size: 11px; }
+.db-event-location    { @apply mt-[2px]; font-size: 12px; color: var(--charcoal-mute); }
+.db-event-notes       { @apply italic mt-[2px]; font-size: 12px; color: var(--charcoal-mute); }
+.db-event-actions     { @apply flex gap-[6px] flex-shrink-0; }
+.db-btn-danger-sm     { background: var(--red-pale); color: var(--red); border: 1px solid #fcc; }
+
+/* ── RSVP page ── */
+.db-page-header-flush { margin-bottom: 0; }
+.db-stats-mt          { margin-top: 24px; }
+.db-card-mt           { margin-top: 24px; }
+.db-table-name-cell   { @apply font-medium; }
+.db-table-sub-cell    { font-size: 11px; color: var(--charcoal-mute); }
+.db-table-soft        { color: var(--charcoal-soft); }
+.db-table-soft-sm     { font-size: 12px; color: var(--charcoal-soft); }
+.db-table-truncate    { @apply block overflow-hidden text-ellipsis whitespace-nowrap; }
+.db-table-meta        { @apply whitespace-nowrap; font-size: 11px; color: var(--charcoal-mute); }
+.db-table-muted-sm    { font-size: 12px; color: var(--charcoal-mute); }
+.db-rsvp-empty        { @apply text-center; padding: 40px 0; color: var(--charcoal-mute); }
+.db-rsvp-empty-icon   { @apply opacity-[.15] mb-[10px]; font-size: 32px; }
+.db-rsvp-empty-text   { font-size: 14px; }
+
+/* ── Share page ── */
+.db-share-layout      { @apply grid gap-6; grid-template-columns: 300px 1fr; }
+.db-share-filters     { @apply flex gap-[6px] mb-3; }
+.db-guest-list-card   { overflow: hidden; }
+.db-guest-list-item   { @apply cursor-pointer transition-colors duration-100; padding: 12px 16px; border-bottom: 1px solid var(--ivory-border); }
+.db-guest-list-name   { @apply font-medium; font-size: 13px; }
+.db-guest-list-meta   { @apply mt-[2px]; font-size: 11px; color: var(--charcoal-mute); }
+.db-guest-sent        { color: var(--green); }
+.db-guest-unsent      { color: var(--charcoal-mute); }
+.db-guest-list-empty  { @apply text-center; padding: 24px; font-size: 13px; color: var(--charcoal-mute); }
+.db-share-panel       { @apply flex flex-col gap-5; }
+.db-template-save-btn { @apply ml-auto; }
+.db-template-textarea { min-height: 140px; font-family: Georgia, serif; font-size: 13px; line-height: 1.8; }
+.db-placeholders-row  { @apply flex gap-2 flex-wrap mt-[10px]; }
+.db-ph-btn            { font-family: monospace; font-size: 11px; }
+
+/* ── Wishes ── */
+.db-wishes-wrap       { @apply flex flex-col gap-6; }
+.db-wish-count-badge  { @apply inline-flex items-center justify-center rounded-full font-semibold ml-2; min-width: 20px; height: 20px; background: var(--rose); color: white; font-size: 11px; padding: 0 6px; }
+.db-wish-row          { @apply flex gap-[14px]; padding: 16px 0; border-bottom: 1px solid var(--ivory-border); }
+.db-wish-row:last-child { border-bottom: none; }
+.db-wish-body         { @apply flex-1; }
+.db-wish-name         { @apply font-medium mb-1; font-size: 13px; }
+.db-wish-msg          { @apply italic leading-relaxed; font-size: 13px; color: var(--charcoal-soft); }
+.db-wish-date         { @apply mt-[6px]; font-size: 11px; color: var(--charcoal-mute); }
+.db-wish-actions      { @apply flex gap-[6px] flex-shrink-0; }
+.db-wishes-empty      { @apply text-center; padding: 32px 0; font-size: 13px; color: var(--charcoal-mute); }
+.db-approved-row      { @apply flex gap-[14px] items-start; padding: 14px 0; border-bottom: 1px solid var(--ivory-border); }
+.db-approved-row:last-child { border-bottom: none; }
+
+/* ── Moments ── */
+.db-moments-empty     { @apply text-center; padding: 40px 0; color: var(--charcoal-mute); }
+.db-moments-empty-icon { @apply opacity-[.15] mb-2; font-size: 32px; }
+.db-moments-empty-text { font-size: 14px; }
+.db-moment-overlay    { @apply text-center; }
+.db-moment-guest      { @apply mb-2; font-size: 11px; color: white; }
+.db-moment-toggle     { @apply cursor-pointer border-none text-white; padding: 5px 12px; border-radius: 20px; font-size: 11px; }
+.db-moment-pending    { @apply absolute; top: 6px; right: 6px; background: var(--rose); border-radius: 10px; padding: 2px 8px; font-size: 10px; color: white; font-weight: 600; }
+
+/* ── Gallery ── */
+.db-gallery-text      { font-size: 12px; color: var(--charcoal-mute); }
+.db-gallery-icon      { @apply opacity-30; font-size: 24px; }
+.db-gallery-del-btn   { @apply absolute flex items-center justify-center rounded-full border-none text-white cursor-pointer; width: 32px; height: 32px; background: rgba(192,57,43,.9); font-size: 14px; }
+.db-gallery-empty     { @apply text-center; padding: 40px 0; color: var(--charcoal-mute); }
+.db-gallery-empty-icon { @apply opacity-[.15] mb-2; font-size: 32px; }
+.db-gallery-empty-text { font-size: 14px; }
+
+/* ── Chat ── */
+.db-chat-avatar       { @apply flex-shrink-0 flex items-center justify-center rounded-full; width: 36px; height: 36px; background: var(--charcoal); color: var(--gold); font-family: var(--font-display); font-size: 16px; }
+.db-chat-support-name { @apply font-semibold; font-size: 14px; }
+.db-chat-support-sub  { font-size: 11px; color: var(--charcoal-mute); }
+.db-chat-status       { @apply flex items-center gap-[6px] ml-auto; }
+.db-chat-status-dot   { @apply rounded-full; width: 8px; height: 8px; background: var(--green); }
+.db-chat-status-lbl   { font-size: 11px; color: var(--charcoal-mute); }
+.db-chat-msg-row      { @apply flex flex-col; }
+.db-chat-msg-row.mine   { @apply items-end; }
+.db-chat-msg-row.theirs { @apply items-start; }
+.db-chat-msg-row.system { @apply items-center; }
+
+/* ── Guests table ── */
+.db-guest-name-cell   { @apply font-medium; }
+.db-guest-type        { font-size: 12px; color: var(--charcoal-soft); font-weight: 500; }
+.db-guest-seats       { font-size: 12px; color: var(--charcoal-soft); font-weight: 600; }
+.db-guest-seats-max   { color: var(--charcoal-mute); font-weight: 400; }
+.db-guest-phone       { font-size: 12px; color: var(--charcoal-mute); }
+.db-guest-muted       { opacity: .4; }
+.db-guest-row-actions { @apply flex gap-[6px]; }
+.db-guest-count-note  { font-size: 12px; color: var(--charcoal-mute); }
+.db-guest-form-note   { @apply mt-3 p-[9px_14px]; background: var(--ivory); border-radius: var(--radius-sm); border: 1px solid var(--ivory-border); font-size: 12px; color: var(--charcoal-soft); }
+.db-ml-auto { margin-left: auto; }
+.db-mt-4       { margin-top: 16px; }
+.db-panel-narrow { max-width: 560px; }
