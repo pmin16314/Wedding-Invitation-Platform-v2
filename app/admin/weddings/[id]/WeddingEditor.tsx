@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast, SaveBar } from "@/app/admin/AdminUI";
+import PhoneInput, { validateLKPhone, toFullPhone } from "@/components/PhoneInput";
 
 /* ── Constants ── */
 const SECTIONS: Record<string,string> = {
@@ -247,11 +248,28 @@ function DetailsPanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;on
   };
   const [form, setForm]     = useState(initial);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string,string>>({});
   const dirty = JSON.stringify(form) !== JSON.stringify(initial);
-  const f = (k:keyof typeof form) => (e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => setForm(p=>({...p,[k]:e.target.value}));
+  const f = (k:keyof typeof form) => (e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
+    setForm(p=>({...p,[k]:e.target.value}));
+    if (errors[k]) setErrors(p=>({...p,[k]:""}));
+  };
+
+  function validate(): Record<string,string> {
+    const e: Record<string,string> = {};
+    if (!form.brideName.trim()) e.brideName = "Bride's name is required";
+    if (!form.groomName.trim()) e.groomName = "Groom's name is required";
+    if (form.bridePhone) { const err = validateLKPhone(form.bridePhone.replace("+94","")); if(err) e.bridePhone = err; }
+    if (form.groomPhone) { const err = validateLKPhone(form.groomPhone.replace("+94","")); if(err) e.groomPhone = err; }
+    if (form.googleMapsUrl && !form.googleMapsUrl.startsWith("http")) e.googleMapsUrl = "Must be a valid URL starting with http";
+    return e;
+  }
 
   async function save(e?:React.FormEvent) {
-    e?.preventDefault(); setSaving(true);
+    e?.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); onToast("Please fix the highlighted fields","error"); return; }
+    setSaving(true);
     const res = await fetch(`/api/admin/weddings/${w.id}/details`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(form)});
     const j   = await res.json(); setSaving(false);
     if(!res.ok){onToast(j.error??"Save failed","error");return;}
@@ -265,10 +283,16 @@ function DetailsPanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;on
       {/* Couple */}
       <p className="a-panel-section">Couple</p>
       <div className="a-form-grid">
-        <div className="a-field"><label className="a-label">Bride's Name</label><input className="a-input" value={form.brideName} onChange={f("brideName")} placeholder="Sachini Silva"/></div>
-        <div className="a-field"><label className="a-label">Groom's Name</label><input className="a-input" value={form.groomName} onChange={f("groomName")} placeholder="Ruwan"/></div>
-        <div className="a-field"><label className="a-label">Bride's Phone <span className="a-label-hint">RSVP</span></label><input className="a-input" value={form.bridePhone} onChange={f("bridePhone")} placeholder="+94 77 123 4567"/></div>
-        <div className="a-field"><label className="a-label">Groom's Name <span className="a-label-hint">RSVP</span></label><input className="a-input" value={form.groomPhone} onChange={f("groomPhone")} placeholder="+94 71 123 4567"/></div>
+        <div className="a-field"><label className="a-label">Bride's Name</label><input className={`a-input${errors.brideName?" input-error":""}`} value={form.brideName} onChange={f("brideName")} placeholder="Sachini Silva"/>{errors.brideName&&<p className="field-error">{errors.brideName}</p>}</div>
+        <div className="a-field"><label className="a-label">Groom's Name</label><input className={`a-input${errors.groomName?" input-error":""}`} value={form.groomName} onChange={f("groomName")} placeholder="Ruwan"/>{errors.groomName&&<p className="field-error">{errors.groomName}</p>}</div>
+        <div className="a-field">
+          <label className="a-label">Bride's Phone <span className="a-label-hint">RSVP</span></label>
+          <PhoneInput value={form.bridePhone} onChange={v=>{ setForm(p=>({...p,bridePhone:v})); if(errors.bridePhone) setErrors(p=>({...p,bridePhone:""})); }} error={errors.bridePhone}/>
+        </div>
+        <div className="a-field">
+          <label className="a-label">Groom's Phone <span className="a-label-hint">RSVP</span></label>
+          <PhoneInput value={form.groomPhone} onChange={v=>{ setForm(p=>({...p,groomPhone:v})); if(errors.groomPhone) setErrors(p=>({...p,groomPhone:""})); }} error={errors.groomPhone}/>
+        </div>
       </div>
 
       {/* Date & Venue */}
@@ -279,7 +303,7 @@ function DetailsPanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;on
         <div className="a-field"><label className="a-label">Venue</label><input className="a-input" value={form.venue} onChange={f("venue")} placeholder="The Grand Garden Hotel"/></div>
         <div className="a-field"><label className="a-label">Hall / Ballroom Optional <span className="a-label-hint">optional</span></label><input className="a-input" value={form.subVenue} onChange={f("subVenue")} placeholder="The Grand Garden Hotel"/></div>
         <div className="a-field a-form-full"><label className="a-label">Venue Address</label><input className="a-input" value={form.venueAddress} onChange={f("venueAddress")} placeholder="123 Garden Road, Colombo 03"/></div>
-        <div className="a-field a-form-full"><label className="a-label">Google Maps URL <span className="a-label-hint">optional</span></label><input className="a-input" value={form.googleMapsUrl} onChange={f("googleMapsUrl")} placeholder="https://maps.google.com/..."/></div>
+        <div className="a-field a-form-full"><label className="a-label">Google Maps URL <span className="a-label-hint">optional</span></label><input className={`a-input${errors.googleMapsUrl?" input-error":""}`} value={form.googleMapsUrl} onChange={f("googleMapsUrl")} placeholder="https://maps.google.com/..."/>{errors.googleMapsUrl&&<p className="field-error">{errors.googleMapsUrl}</p>}</div>
       </div>
 
       {/* Invitation Line */}
@@ -563,11 +587,19 @@ function CouplePanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
   const appUrl   = process.env.NEXT_PUBLIC_APP_URL??"http://localhost:3000";
   const loginUrl = `${appUrl}/${w.slug}/couple-login`;
 
+  // Password reveal state
+  const [revealOpen,    setRevealOpen]    = useState(false);
+  const [adminPw,       setAdminPw]       = useState("");
+  const [revealedPw,    setRevealedPw]    = useState<string|null>(null);
+  const [verifying,     setVerifying]     = useState(false);
+  const [revealError,   setRevealError]   = useState("");
+  const [revealCopied,  setRevealCopied]  = useState(false);
+
   async function resetPassword(e:React.FormEvent) {
     e.preventDefault(); setSaving(true);
     const res = await fetch(`/api/admin/weddings/${w.id}/credentials`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({newPassword:pw})});
     setSaving(false);
-    if(res.ok){onToast("Password updated");setPw("");}
+    if(res.ok){onToast("Password updated");setPw(""); setRevealedPw(null);}
     else onToast("Failed to update password","error");
   }
   async function resetUsername(e:React.FormEvent) {
@@ -576,6 +608,22 @@ function CouplePanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
     setSaving(false);
     if(res.ok){onToast("Username updated");setNewUsername("");onRefresh();}
     else{const j=await res.json();onToast(j.error??"Failed to update username","error");}
+  }
+
+  async function verifyAndReveal(e:React.FormEvent) {
+    e.preventDefault(); setVerifying(true); setRevealError("");
+    const res = await fetch("/api/admin/verify-password",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:adminPw})});
+    setVerifying(false);
+    if(res.ok){
+      // Fetch the couple's plain password via a new endpoint
+      const r2 = await fetch(`/api/admin/weddings/${w.id}/credentials/reveal`,{method:"POST"});
+      const j2 = await r2.json();
+      if(r2.ok){ setRevealedPw(j2.data.password); setRevealOpen(false); setAdminPw(""); }
+      else setRevealError(j2.error??"Failed to retrieve password");
+    } else {
+      const j = await res.json();
+      setRevealError(j.error??"Incorrect password");
+    }
   }
 
   return (
@@ -589,6 +637,8 @@ function CouplePanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
           </div>
         ))}
       </div>
+
+      {/* Login URL */}
       <div className="a-field a-field-mb">
         <label className="a-label">Couple Login URL</label>
         <div className="a-inline-form">
@@ -598,6 +648,51 @@ function CouplePanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
           </button>
         </div>
       </div>
+
+      {/* Reveal password */}
+      <div className="a-field a-field-mb">
+        <label className="a-label">Current Password</label>
+        {revealedPw ? (
+          <div className="a-inline-form">
+            <input className="a-input a-input-mono a-input-flex" value={revealedPw} readOnly/>
+            <button className="a-btn a-btn-outline" onClick={async()=>{await navigator.clipboard.writeText(revealedPw);setRevealCopied(true);setTimeout(()=>setRevealCopied(false),2000);}}>
+              {revealCopied?"✓ Copied":"Copy"}
+            </button>
+            <button className="a-btn a-btn-ghost" onClick={()=>setRevealedPw(null)}>Hide</button>
+          </div>
+        ) : (
+          <button className="a-btn a-btn-outline" onClick={()=>{setRevealOpen(true);setRevealError("");}}>
+            🔒 Reveal Password
+          </button>
+        )}
+      </div>
+
+      {/* Admin verify modal */}
+      {revealOpen && (
+        <div className="a-confirm-backdrop" onClick={e=>{if(e.target===e.currentTarget){setRevealOpen(false);setAdminPw("");}}}>
+          <div className="a-confirm-box">
+            <div className="a-confirm-header">
+              <div className="a-confirm-title">Verify Your Identity</div>
+            </div>
+            <div className="a-confirm-body">
+              Enter your admin password to reveal this couple&apos;s login password.
+              <form onSubmit={verifyAndReveal} style={{marginTop:14}}>
+                <input className="a-input" type="password" placeholder="Your admin password"
+                  value={adminPw} onChange={e=>setAdminPw(e.target.value)} required autoFocus/>
+                {revealError && <p style={{fontSize:12,color:"var(--red)",marginTop:8}}>{revealError}</p>}
+                <div className="a-confirm-footer" style={{padding:"16px 0 0",border:"none"}}>
+                  <button type="button" className="a-btn a-btn-ghost" onClick={()=>{setRevealOpen(false);setAdminPw("");}}>Cancel</button>
+                  <button type="submit" className="a-btn a-btn-primary" disabled={verifying||!adminPw}>
+                    {verifying?<><span className="a-spinner"/>Verifying…</>:"Reveal"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Change username */}
       <div className="a-field a-field-mb">
         <label className="a-label">Change Username</label>
         <form onSubmit={resetUsername} className="a-inline-form">
@@ -609,8 +704,10 @@ function CouplePanel({w,onRefresh,onToast}:{w:WeddingData;onRefresh:()=>void;onT
           </button>
         </form>
       </div>
+
+      {/* Reset password */}
       <div className="a-field">
-        <label className="a-label">Reset Password</label>
+        <label className="a-label">Set New Password</label>
         <form onSubmit={resetPassword} className="a-inline-form">
           <input className="a-input a-input-flex" type="password" placeholder="New password (min 8)"
             value={pw} onChange={e=>setPw(e.target.value)} required minLength={8}/>

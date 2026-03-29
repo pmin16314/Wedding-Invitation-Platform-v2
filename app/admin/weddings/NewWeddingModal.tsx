@@ -16,6 +16,7 @@ export default function NewWeddingModal({ open, onClose, onCreated }: Props) {
   const [form,    setForm]    = useState(DEFAULT_FORM);
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
+  const [errors,  setErrors]  = useState<Record<string,string>>({});
   const [result,  setResult]  = useState<{ slug: string; password: string; username: string } | null>(null);
 
   // Reset state when modal opens
@@ -41,12 +42,30 @@ export default function NewWeddingModal({ open, onClose, onCreated }: Props) {
   const f = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm(p => ({ ...p, [k]: e.target.value }));
 
+  function validate(): Record<string,string> {
+    const e: Record<string,string> = {};
+    if (!form.brideName.trim())      e.brideName = "Required";
+    if (!form.groomName.trim())      e.groomName = "Required";
+    if (!form.coupleUsername.trim()) e.coupleUsername = "Required";
+    if (form.coupleEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.coupleEmail)) e.coupleEmail = "Invalid email address";
+    if (form.couplePassword && form.couplePassword.length < 8) e.couplePassword = "Must be at least 8 characters if provided";
+    return e;
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true); setError("");
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setLoading(true); setError(""); setErrors({});
+    // Strip empty password so API auto-generates one
+    const payload = {
+      ...form,
+      couplePassword: form.couplePassword.trim() || undefined,
+      coupleEmail:    form.coupleEmail.trim()    || undefined,
+    };
     const res  = await fetch("/api/admin/weddings/new", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     });
     const json = await res.json();
     setLoading(false);
@@ -105,13 +124,15 @@ export default function NewWeddingModal({ open, onClose, onCreated }: Props) {
               <div className="a-form-grid">
                 <div className="a-field">
                   <label className="a-label">Bride's Name *</label>
-                  <input className="a-input" required value={form.brideName}
-                    onChange={f("brideName")} onBlur={suggestUsername} placeholder="Ishara" />
+                  <input className={`a-input${errors.brideName?" input-error":""}`} value={form.brideName}
+                    onChange={e=>{f("brideName")(e);if(errors.brideName)setErrors(p=>({...p,brideName:""}));}} onBlur={suggestUsername} placeholder="Ishara" />
+                  {errors.brideName&&<p className="field-error">{errors.brideName}</p>}
                 </div>
                 <div className="a-field">
                   <label className="a-label">Groom's Name *</label>
-                  <input className="a-input" required value={form.groomName}
-                    onChange={f("groomName")} onBlur={suggestUsername} placeholder="Panchana" />
+                  <input className={`a-input${errors.groomName?" input-error":""}`} value={form.groomName}
+                    onChange={e=>{f("groomName")(e);if(errors.groomName)setErrors(p=>({...p,groomName:""}));}} onBlur={suggestUsername} placeholder="Panchana" />
+                  {errors.groomName&&<p className="field-error">{errors.groomName}</p>}
                 </div>
                 <div className="a-field">
                   <label className="a-label">Wedding Date</label>
@@ -127,19 +148,22 @@ export default function NewWeddingModal({ open, onClose, onCreated }: Props) {
                 </div>
                 <div className="a-field a-form-full">
                   <label className="a-label">Username * <span className="a-label-hint">couple uses this to log in</span></label>
-                  <input className="a-input" required value={form.coupleUsername} onChange={f("coupleUsername")}
-                    placeholder="ishara.panchana" pattern="[a-z0-9._\-]+" title="Letters, numbers, dots, hyphens only" />
+                  <input className={`a-input${errors.coupleUsername?" input-error":""}`} value={form.coupleUsername} onChange={e=>{f("coupleUsername")(e);if(errors.coupleUsername)setErrors(p=>({...p,coupleUsername:""}));}}
+                    placeholder="ishara.panchana" pattern="[a-z0-9._\-]+" />
+                  {errors.coupleUsername&&<p className="field-error">{errors.coupleUsername}</p>}
                   <span className="a-hint-text">Auto-suggested from names — lowercase, dots and hyphens only</span>
                 </div>
                 <div className="a-field a-form-full">
                   <label className="a-label">Email <span className="a-label-hint">optional</span></label>
-                  <input className="a-input" type="email" value={form.coupleEmail}
-                    onChange={f("coupleEmail")} placeholder="couple@example.com" />
+                  <input className={`a-input${errors.coupleEmail?" input-error":""}`} type="email" value={form.coupleEmail}
+                    onChange={e=>{f("coupleEmail")(e);if(errors.coupleEmail)setErrors(p=>({...p,coupleEmail:""}));}} placeholder="couple@example.com" />
+                  {errors.coupleEmail&&<p className="field-error">{errors.coupleEmail}</p>}
                 </div>
                 <div className="a-field a-form-full">
                   <label className="a-label">Password <span className="a-label-hint">leave blank to auto-generate</span></label>
-                  <input className="a-input" type="password" value={form.couplePassword}
-                    onChange={f("couplePassword")} placeholder="Min 8 characters" minLength={8} />
+                  <input className={`a-input${errors.couplePassword?" input-error":""}`} type="password" value={form.couplePassword}
+                    onChange={e=>{f("couplePassword")(e);if(errors.couplePassword)setErrors(p=>({...p,couplePassword:""}));}} placeholder="Min 8 characters (or leave blank to auto-generate)" />
+                  {errors.couplePassword&&<p className="field-error">{errors.couplePassword}</p>}
                 </div>
               </div>
             </form>

@@ -9,7 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const [wedding, unreadChat] = await Promise.all([
+  const [wedding, unreadChat, coupleUser] = await Promise.all([
     session.user.weddingId ? prisma.wedding.findUnique({
       where: { id: session.user.weddingId },
       include: { content: true, theme: true },
@@ -17,13 +17,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
     session.user.weddingId ? prisma.chatMessage.count({
       where: { weddingId: session.user.weddingId, senderRole: { not: "COUPLE" }, isRead: false }
     }) : 0,
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { avatarUrl: true } }),
   ]);
 
   return (
     <ToastProvider>
       <div className="db-wrap">
         <DashboardSidebar
-          user={{ name: session.user.name ?? "Couple", email: session.user.email ?? "" }}
+          user={{ name: session.user.name ?? "Couple", email: session.user.email ?? "", avatarUrl: coupleUser?.avatarUrl }}
           unreadChat={unreadChat}
           wedding={wedding ? {
             slug: wedding.slug, status: wedding.status,

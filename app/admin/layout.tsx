@@ -9,16 +9,17 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const session = await auth();
   if (!session?.user || session.user.role !== "ADMIN") redirect("/login");
 
-  const [unreadChat, newLeads] = await Promise.all([
+  const [unreadChat, newLeads, adminUser] = await Promise.all([
     prisma.chatMessage.count({ where: { senderRole: "COUPLE", isRead: false } }),
     prisma.lead.count({ where: { status: "NEW" } }),
+    prisma.user.findUnique({ where: { id: session.user.id }, select: { avatarUrl: true } }),
   ]);
 
   return (
     <ToastProvider>
       <div className="a-wrap">
         <AdminSidebar
-          user={{ name: session.user.name ?? "Admin", email: session.user.email ?? "" }}
+          user={{ name: session.user.name ?? "Admin", email: session.user.email ?? "", avatarUrl: adminUser?.avatarUrl }}
           unreadChat={unreadChat}
           newLeads={newLeads}
         />

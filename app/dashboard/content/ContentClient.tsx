@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useToast } from "@/app/dashboard/DashboardUI";
+import PhoneInput, { validateLKPhone } from "@/components/PhoneInput";
 
 const DEFAULT_INVITATION_LINE = "Together with their families, request the honour of your presence at the marriage of";
 const DEFAULT_PRE_TEXT = "Together with their families";
@@ -36,13 +37,30 @@ export default function ContentClient({ content, wedding }: { content:any; weddi
     specialNote:       content?.specialNote       ?? "",
   });
   const { show: showToast } = useToast();
-  const f = (k: keyof ContentData) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) =>
+  const [errors, setErrors] = useState<Record<string,string>>({});
+
+  function validate(): Record<string,string> {
+    const e: Record<string,string> = {};
+    if (!form.brideName.trim()) e.brideName = "Bride's name is required";
+    if (!form.groomName.trim()) e.groomName = "Groom's name is required";
+    if (form.bridePhone) { const err = validateLKPhone(form.bridePhone.replace("+94","")); if(err) e.bridePhone = err; }
+    if (form.groomPhone) { const err = validateLKPhone(form.groomPhone.replace("+94","")); if(err) e.groomPhone = err; }
+    if (form.googleMapsUrl && !form.googleMapsUrl.startsWith("http")) e.googleMapsUrl = "Must be a valid URL starting with http";
+    return e;
+  }
+
+  const f = (k: keyof ContentData) => (e: React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
     setForm(p => ({...p, [k]: e.target.value}));
+    if (errors[k]) setErrors(p => ({...p, [k]: ""}));
+  };
 
   const [saving, setSaving] = useState(false);
 
   async function save(e: React.FormEvent) {
-    e.preventDefault(); setSaving(true);
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); showToast("Please fix the highlighted fields", "error"); return; }
+    setSaving(true);
     const res = await fetch("/api/couple/content", {
       method:"PATCH", headers:{"Content-Type":"application/json"}, body:JSON.stringify(form),
     });
@@ -69,10 +87,14 @@ export default function ContentClient({ content, wedding }: { content:any; weddi
         <div className="db-card-body">
           <div className="db-form-grid">
             <Section title="Couple" />
-            <div className="db-field"><label className="db-label">Bride's Name</label><input className="db-input" value={form.brideName} onChange={f("brideName")} placeholder="Sachini"/></div>
-            <div className="db-field"><label className="db-label">Groom's Name</label><input className="db-input" value={form.groomName} onChange={f("groomName")} placeholder="Mark"/></div>
-            <div className="db-field"><label className="db-label">Bride's Phone <span className="db-hint">for RSVP</span></label><input className="db-input" value={form.bridePhone} onChange={f("bridePhone")} placeholder="+94 77 123 4567"/></div>
-            <div className="db-field"><label className="db-label">Groom's Phone <span className="db-hint">for RSVP</span></label><input className="db-input" value={form.groomPhone} onChange={f("groomPhone")} placeholder="+94 71 123 4567"/></div>
+            <div className="db-field"><label className="db-label">Bride's Name</label><input className={`db-input${errors.brideName?" input-error":""}`} value={form.brideName} onChange={f("brideName")} placeholder="Sachini"/>{errors.brideName&&<p className="field-error">{errors.brideName}</p>}</div>
+            <div className="db-field"><label className="db-label">Groom's Name</label><input className={`db-input${errors.groomName?" input-error":""}`} value={form.groomName} onChange={f("groomName")} placeholder="Mark"/>{errors.groomName&&<p className="field-error">{errors.groomName}</p>}</div>
+            <div className="db-field"><label className="db-label">Bride's Phone <span className="db-hint">for RSVP</span></label>
+              <PhoneInput value={form.bridePhone} onChange={v=>{setForm(p=>({...p,bridePhone:v}));if(errors.bridePhone)setErrors(p=>({...p,bridePhone:""}));}} error={errors.bridePhone} className="db-input"/>
+            </div>
+            <div className="db-field"><label className="db-label">Groom's Phone <span className="db-hint">for RSVP</span></label>
+              <PhoneInput value={form.groomPhone} onChange={v=>{setForm(p=>({...p,groomPhone:v}));if(errors.groomPhone)setErrors(p=>({...p,groomPhone:""}));}} error={errors.groomPhone} className="db-input"/>
+            </div>
 
             <Section title="Parents" />
             <div className="db-field"><label className="db-label">Bride's Parents</label><input className="db-input" value={form.brideParents} onChange={f("brideParents")} placeholder="Mr. & Mrs. Krishantha Silva"/></div>

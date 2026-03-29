@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useToast, ConfirmDialog } from "@/app/dashboard/DashboardUI";
+import PhoneInput, { validateLKPhone, toFullPhone } from "@/components/PhoneInput";
 
 const INVITE_TYPES = [
   { value:"MR",         label:"Mr.",        seats:1,    fixed:true  },
@@ -29,6 +30,7 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
     name:"", inviteType:"MR", phone:"", group:"", side:"", maxAttendees:2,
   });
   const [saving, setSaving] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string,string>>({});
   const APP = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
   const totalInvitedSeats   = guests.reduce((s,g) => s + g.maxAttendees, 0);
@@ -43,8 +45,17 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
     MR_AND_MRS:"Mr. & Mrs. Fernando", FAMILY:"The Silva Family",
   };
 
+  function validateGuestForm() {
+    const e: Record<string,string> = {};
+    if (!form.name.trim()) e.name = "Guest name is required";
+    if (form.phone) { const err = validateLKPhone(form.phone.replace("+94","")); if(err) e.phone = err; }
+    return e;
+  }
+
   async function addGuest(e: React.FormEvent) {
     e.preventDefault();
+    const errs = validateGuestForm();
+    if (Object.keys(errs).length) { setFormErrors(errs); return; }
     setSaving(true);
     const payload: any = {
       name: form.name, inviteType: form.inviteType,
@@ -62,6 +73,7 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
     setGuests(gs => [j.data.guest, ...gs]);
     setShowAdd(false);
     setForm({ name:"", inviteType:"MR", phone:"", group:"", side:"", maxAttendees:2 });
+    setFormErrors({});
     showToast("Guest added");
   }
 
@@ -137,16 +149,17 @@ export default function GuestsClient({ guests:initial, weddingPackage, weddingSl
 
                 <div className="db-field">
                   <label className="db-label">Full Name *</label>
-                  <input className="db-input" required value={form.name}
-                    onChange={e=>setForm(f=>({...f, name:e.target.value}))}
+                  <input className={`db-input${formErrors.name?" input-error":""}`} value={form.name}
+                    onChange={e=>{setForm(f=>({...f, name:e.target.value}));if(formErrors.name)setFormErrors(p=>({...p,name:""}));}}
                     placeholder={namePlaceholder[form.inviteType]}/>
+                  {formErrors.name&&<p className="field-error">{formErrors.name}</p>}
                 </div>
 
                 <div className="db-field">
                   <label className="db-label">WhatsApp</label>
-                  <input className="db-input" value={form.phone}
-                    onChange={e=>setForm(f=>({...f, phone:e.target.value}))}
-                    placeholder="+94771234567"/>
+                  <PhoneInput value={form.phone}
+                    onChange={v=>{setForm(f=>({...f,phone:v}));if(formErrors.phone)setFormErrors(p=>({...p,phone:""}));}}
+                    error={formErrors.phone} className="db-input"/>
                 </div>
 
                 <div className="db-field">

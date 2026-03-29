@@ -1,9 +1,11 @@
 "use client";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { IconGrid, IconUsers, IconCheck, IconPhoto, IconHeart, IconCamera, IconShare, IconChat, IconEdit, IconGear } from "@/components/icons";
+import SettingsModal from "@/components/SettingsModal";
 interface Props {
-  user: { name: string; email: string };
+  user: { name: string; email: string; avatarUrl?: string | null };
   unreadChat?: number;
   wedding: { slug:string; status:string; brideName:string; groomName:string; primaryColor:string } | null;
 }
@@ -23,6 +25,8 @@ const nav = [
 
 export default function DashboardSidebar({ user, unreadChat=0, wedding }: Props) {
   const pathname = usePathname();
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl ?? null);
   const isActive = (href: string) => href==="/dashboard" ? pathname==="/dashboard" : pathname.startsWith(href);
   const pc = wedding?.primaryColor ?? "#C9A84C";
   const name = wedding?.brideName && wedding?.groomName
@@ -30,6 +34,7 @@ export default function DashboardSidebar({ user, unreadChat=0, wedding }: Props)
   const initials = name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
 
   return (
+    <>
     <aside className="db-sidebar">
       <div className="db-sidebar-brand">
         <div className="db-sidebar-brand-mark db-brand-mark">✦ VOWLY</div>
@@ -58,14 +63,34 @@ export default function DashboardSidebar({ user, unreadChat=0, wedding }: Props)
 
       <div className="db-sidebar-user">
         <div className="db-user-inner">
-          <div className="db-user-avatar" style={{background:pc}}>{initials}</div>
+          <div className="db-user-avatar"
+            style={{background: avatarUrl ? "transparent" : pc, cursor: "pointer"}}
+            onClick={() => setSettingsOpen(true)}>
+            {avatarUrl
+              ? <img src={avatarUrl} alt={user.name} style={{width:"100%",height:"100%",borderRadius:"50%",objectFit:"cover"}} />
+              : initials}
+          </div>
           <div>
             <div className="db-user-name">{user.name}</div>
             <div className="db-user-email">{user.email}</div>
           </div>
         </div>
-        <button className="db-signout-btn" onClick={()=>signOut({callbackUrl:"/"})}>Sign out</button>
+        <div style={{display:"flex",gap:4}}>
+          <button className="db-settings-btn" onClick={() => setSettingsOpen(true)} title="Settings">
+            <IconGear size={14} />
+          </button>
+          <button className="db-signout-btn" onClick={()=>signOut({callbackUrl:"/"})}>Sign out</button>
+        </div>
       </div>
     </aside>
+
+    <SettingsModal
+      open={settingsOpen}
+      onClose={() => setSettingsOpen(false)}
+      user={{ ...user, avatarUrl }}
+      onAvatarChange={url => setAvatarUrl(url)}
+      theme="dashboard"
+    />
+  </>
   );
 }

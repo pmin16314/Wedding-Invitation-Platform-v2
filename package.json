@@ -1,6 +1,6 @@
 {
   "name": "vowly-invites",
-  "version": "5.8.2",
+  "version": "5.9.1",
   "private": true,
   "scripts": {
     "dev": "cross-env WATCHPACK_POLLING=true next dev",
