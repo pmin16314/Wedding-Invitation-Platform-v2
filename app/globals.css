@@ -158,9 +158,9 @@ body {
 .settings-btn-ghost:hover { background: var(--ivory); color: var(--charcoal); }
 
 /* Settings gear button in sidebar */
-.a-settings-btn  { @apply flex-shrink-0 flex items-center justify-center cursor-pointer border-none transition-all duration-150; width: 28px; height: 28px; border-radius: 6px; background: transparent; color: var(--charcoal-mute); }
+.a-settings-btn  { @apply flex-shrink-0 flex items-center justify-center cursor-pointer border-none transition-all duration-150; width: 44px; height: 44px; border-radius: 6px; background: transparent; color: var(--charcoal-mute); border: 1px solid rgba(255,255,255,.1);}
 .a-settings-btn:hover { background: rgba(255,255,255,.08); color: white; }
-.db-settings-btn { @apply flex-shrink-0 flex items-center justify-center cursor-pointer border-none transition-all duration-150; width: 28px; height: 28px; border-radius: 6px; background: transparent; color: var(--charcoal-mute); }
+.db-settings-btn { @apply flex-shrink-0 flex items-center justify-center cursor-pointer border-none transition-all duration-150; width: 28px; height: 28px; border-radius: 6px; background: transparent; color: var(--charcoal-mute); border: 1px solid rgba(255,255,255,.1); }
 .db-settings-btn:hover { background: var(--ivory); color: var(--charcoal); }
 .settings-name-form  { @apply mb-4 pb-4; border-bottom: 1px solid var(--ivory-border); }
 .settings-pw-mismatch { font-size: 11px; color: var(--red, #c0392b); margin-top: 4px; }

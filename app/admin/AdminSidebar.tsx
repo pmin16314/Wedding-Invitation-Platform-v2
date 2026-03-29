@@ -80,12 +80,12 @@ export default function AdminSidebar({ user, unreadChat = 0, newLeads = 0 }: Pro
               <div className="a-sidebar-user-email">{user.email}</div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: 4 }}>
-            <button className="a-settings-btn" onClick={() => setSettingsOpen(true)} title="Settings">
-              <IconGear size={14} />
-            </button>
+          <div style={{ display: "flex", gap: 8 }}>            
             <button className="a-signout-btn" onClick={() => signOut({ callbackUrl: "/login" })}>
               Sign out
+            </button>
+            <button className="a-settings-btn" onClick={() => setSettingsOpen(true)} title="Settings">
+              <IconGear size={14} />
             </button>
           </div>
         </div>

@@ -142,10 +142,10 @@ export default function AdminChatClient({ weddings: initial, initialWeddingId }:
             <div>
               <div className="a-chat-panel-name">{selectedWedding.name}</div>
               <div className="a-chat-panel-meta">
-                <span className={`a-badge a-badge-${selectedWedding.status.toLowerCase()}`} className="a-badge-xs">
+                <span className={`a-badge a-badge-${selectedWedding.status.toLowerCase()}`}>
                   {selectedWedding.status}
                 </span>
-                <span className={`a-badge a-badge-${selectedWedding.package.toLowerCase()}`} className="a-badge-xs">
+                <span className={`a-badge a-badge-${selectedWedding.package.toLowerCase()}`}>
                   {selectedWedding.package}
                 </span>
               </div>
@@ -206,7 +206,7 @@ export default function AdminChatClient({ weddings: initial, initialWeddingId }:
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
               rows={1}
             />
-            <button className="a-btn a-btn-primary" onClick={send} disabled={sending || !input.trim()}>
+            <button className="a-btn a-btn-primary" style={{ height: '44px' }} onClick={send} disabled={sending || !input.trim()}>
               {sending ? <span className="a-spinner" /> : "Send"}
             </button>
           </div>

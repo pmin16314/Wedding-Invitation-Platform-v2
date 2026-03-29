@@ -132,7 +132,7 @@ export default function LeadsClient({ leads: initial }: { leads: Lead[] }) {
                   </td>
                   <td className="a-table-muted">{l.whatsapp}</td>
                   <td><span className={`a-badge a-badge-${l.package.toLowerCase()}`}>{l.package}</span></td>
-                  <td className="a-text-center">{l.hasDesignerCard ? "✓" : "—"}</td>
+                  <td className="a-text-center">{l.hasDesignerCard ? "Yes" : "No"}</td>
                   <td>
                     <select className="a-select a-select-sm"
                       value={l.status} onChange={e=>updateStatus(l.id,e.target.value)}>
@@ -149,17 +149,16 @@ export default function LeadsClient({ leads: initial }: { leads: Lead[] }) {
                     <div className="a-table-actions">
                       <a href={`https://wa.me/${l.whatsapp.replace(/\D/g,"")}?text=${encodeURIComponent(`Hi ${l.name}, thank you for your interest in Vowly Invites! I'd love to chat about your ${l.package} package. When is a good time to connect?`)}`}
                         target="_blank" rel="noopener" className="a-lead-wa-btn">
-                        <IconWhatsApp size={12} />
-                        WhatsApp
+                        <IconWhatsApp size={16} />
                       </a>
                       {l.status === "PAID" && (
                         <button className="a-btn a-btn-sm a-btn-primary" onClick={()=>openModal(l)}>
-                          💍 Create Wedding
+                          + Create Wedding
                         </button>
                       )}
                       {l.status === "CONVERTED" && l.weddingSlug && (
                         <a href="/admin/weddings" className="a-btn a-btn-sm a-btn-success">
-                          ✓ View Wedding
+                          View Wedding
                         </a>
                       )}
                     </div>

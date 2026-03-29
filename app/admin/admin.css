@@ -42,7 +42,7 @@
 .a-nav-item {
   @apply flex items-center gap-[16px] w-full text-left no-underline transition-all duration-150 cursor-pointer;
   border-radius: var(--radius-md);
-  padding: 16px;
+  padding: 16px 24px;
   color: rgba(255,255,255,.55); font-size: 16px; font-weight: 400;
   border: none; background: none;
 }
@@ -58,25 +58,26 @@
 }
 .a-nav-badge.gold { background: var(--gold); color: var(--charcoal); }
 .a-sidebar-user { padding: 16px 16px 20px; border-top: 1px solid rgba(255,255,255,.08); }
-.a-sidebar-user-inner { @apply flex items-center gap-[10px] mb-[10px]; }
+.a-sidebar-user-inner { @apply flex items-center gap-[16px] mb-[10px]; }
 .a-sidebar-avatar {
   @apply flex-shrink-0 flex items-center justify-center rounded-full font-semibold relative;
-  width: 32px; height: 32px;
-  background: var(--gold); color: var(--charcoal); font-size: 12px;
+  width: 48px; height: 48px;
+  background: var(--gold); color: var(--charcoal); font-size: 16px;
 }
 .a-sidebar-avatar-dot {
   @apply absolute rounded-full;
-  bottom: -1px; right: -1px; width: 9px; height: 9px;
+  bottom: -1px; right: -1px; width: 12px; height: 12px;
   background: var(--green); border: 2px solid var(--charcoal);
   animation: pulse-dot 2s ease infinite;
 }
-.a-sidebar-user-name  { @apply font-medium leading-tight; font-size: 12px; color: white; }
-.a-sidebar-user-email { font-size: 11px; color: rgba(255,255,255,.35); }
+.a-sidebar-user-name  { @apply font-medium leading-tight; font-size: 16px; color: white; }
+.a-sidebar-user-email { font-size: 12px; color: rgba(255,255,255,.35); }
 .a-signout-btn {
   @apply w-full cursor-pointer transition-all duration-150;
-  padding: 8px 12px; border-radius: var(--radius-sm);
+  height: 44px;
+  padding: 0px 12px; border-radius: var(--radius-md);
   background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-  color: rgba(255,255,255,.55); font-size: 12px; font-family: var(--font-body);
+  color: rgba(255,255,255,.55); font-size: 16px; font-family: var(--font-body);
 }
 .a-signout-btn:hover { background: rgba(255,255,255,.1); color: white; }
 
@@ -109,7 +110,7 @@
 .a-stat-sub   { @apply mt-1; font-size: 12px; color: var(--charcoal-soft); }
 
 /* ── Buttons ── */
-.a-btn { @apply inline-flex items-center gap-[7px] font-medium cursor-pointer transition-all duration-150 no-underline whitespace-nowrap; padding: 9px 18px; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-body); border: none; }
+.a-btn { @apply inline-flex items-center gap-[7px] font-medium cursor-pointer transition-all duration-150 no-underline whitespace-nowrap; height: 32px ; padding: 9px 18px; border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-body); border: none; }
 .a-btn-primary { background: var(--charcoal); color: white; }
 .a-btn-primary:hover { background: var(--charcoal-mid); }
 .a-btn-gold { background: var(--gold); color: var(--charcoal); }
@@ -154,7 +155,7 @@
 .a-table tbody tr:hover td { background: var(--ivory); }
 .a-table-name    { @apply font-medium; }
 .a-table-muted   { color: var(--charcoal-mute); }
-.a-table-actions { @apply flex items-center gap-[6px]; }
+.a-table-actions { @apply flex items-center gap-[8px]; }
 
 /* ── Badges ── */
 .a-badge           { @apply inline-flex items-center gap-[5px] font-medium; padding: 3px 10px; border-radius: 20px; font-size: 11px; letter-spacing: .02em; }
@@ -244,20 +245,20 @@
 
 /* ── Leads ── */
 .a-lead-status-tag { @apply font-medium cursor-pointer transition-all duration-150; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
-.a-lead-wa-btn     { @apply inline-flex items-center gap-[5px] font-medium cursor-pointer transition-opacity duration-150 no-underline; padding: 5px 10px; border-radius: var(--radius-sm); background: #25D366; color: white; font-size: 11px; border: none; }
+.a-lead-wa-btn     { @apply inline-flex items-center gap-[5px] font-medium cursor-pointer transition-opacity duration-150 no-underline; height: 32px; width: 32px; padding: 5px 10px; border-radius: var(--radius-md); background: #25D366; color: white; font-size: 11px; border: none; }
 .a-lead-wa-btn:hover { opacity: .85; }
 
 /* ── Chat ── */
 .a-chat-layout       { @apply flex-1 min-h-0 overflow-hidden; display: grid; grid-template-columns: 300px 1fr; background: white; border: 1px solid var(--ivory-border); border-radius: var(--radius-lg); }
 .a-chat-list         { @apply flex flex-col overflow-hidden; border-right: 1px solid var(--ivory-border); }
 .a-chat-list-header  { @apply flex-shrink-0 p-4; border-bottom: 1px solid var(--ivory-border); }
-.a-chat-list-search  { @apply w-full outline-none; padding: 8px 12px; border: 1px solid var(--ivory-border); border-radius: var(--radius-sm); font-size: 13px; background: var(--ivory); color: var(--charcoal); font-family: var(--font-body); }
+.a-chat-list-search  { @apply w-full outline-none; padding: 8px 12px; border: 1px solid var(--ivory-border); border-radius: var(--radius-md); font-size: 13px; background: var(--ivory); color: var(--charcoal); font-family: var(--font-body); }
 .a-chat-list-search:focus { border-color: var(--gold); }
 .a-chat-list-items   { @apply flex-1 overflow-y-auto; }
 .a-chat-item         { @apply flex items-center gap-3 cursor-pointer transition-colors duration-100; padding: 14px 16px; border-bottom: 1px solid var(--ivory-border); }
 .a-chat-item:hover   { background: var(--ivory); }
 .a-chat-item.active  { background: var(--gold-pale); }
-.a-chat-item-avatar  { @apply flex-shrink-0 flex items-center justify-center rounded-full; width: 36px; height: 36px; background: var(--charcoal); color: var(--gold); font-family: var(--font-display); font-size: 14px; }
+.a-chat-item-avatar  { @apply flex-shrink-0 flex items-center justify-center rounded-full; width: 48px; height: 48px; background: var(--charcoal); color: var(--gold); font-family: var(--font-body); font-size: 14px; }
 .a-chat-item-name    { @apply font-medium; font-size: 13px; color: var(--charcoal); }
 .a-chat-item-preview { @apply whitespace-nowrap overflow-hidden text-ellipsis; font-size: 12px; color: var(--charcoal-mute); }
 .a-chat-item-time    { @apply flex-shrink-0; font-size: 11px; color: var(--charcoal-mute); }
@@ -265,13 +266,13 @@
 .a-chat-panel        { @apply flex flex-col overflow-hidden; }
 .a-chat-panel-header { @apply flex-shrink-0 flex items-center gap-3; padding: 16px 20px; border-bottom: 1px solid var(--ivory-border); }
 .a-chat-messages     { @apply flex-1 overflow-y-auto flex flex-col gap-3 min-h-0; padding: 20px; }
-.a-chat-bubble       { @apply leading-relaxed; max-width: 70%; padding: 10px 14px; border-radius: var(--radius-md); font-size: 13px; }
+.a-chat-bubble       { @apply leading-relaxed; max-width: 70%; padding: 10px 14px; border-radius: var(--radius-md); font-size: 12px; }
 .a-chat-bubble.admin  { background: var(--charcoal); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 .a-chat-bubble.couple { background: var(--ivory-deep); color: var(--charcoal); align-self: flex-start; border-bottom-left-radius: 4px; }
 .a-chat-bubble.system { @apply text-center italic; background: transparent; color: var(--charcoal-mute); font-size: 12px; align-self: center; max-width: 90%; border: 1px dashed var(--ivory-border); padding: 6px 14px; }
 .a-chat-time         { @apply mt-[3px]; font-size: 10px; color: var(--charcoal-mute); }
 .a-chat-input-row    { @apply flex-shrink-0 flex gap-[10px] items-end; padding: 12px 16px; border-top: 1px solid var(--ivory-border); }
-.a-chat-input        { @apply flex-1 resize-none outline-none transition-colors duration-150; padding: 10px 14px; border: 1px solid var(--ivory-border); border-radius: var(--radius-md); font-size: 13px; min-height: 42px; max-height: 120px; font-family: var(--font-body); color: var(--charcoal); background: white; }
+.a-chat-input        { @apply flex-1 resize-none outline-none transition-colors duration-150; padding: 10px 14px; border: 1px solid var(--ivory-border); border-radius: var(--radius-md); font-size: 13px; min-height: 44px; max-height: 120px; font-family: var(--font-body); color: var(--charcoal); background: white; }
 .a-chat-input:focus  { border-color: var(--gold); }
 
 /* ── Colour swatches ── */
